@@ -370,6 +370,18 @@ async function startLevel2() {
   Kit.ambient(true);
   try { L2.data = await api('/api/nivel2/data'); } catch (e) { toast('Error del servidor: ' + e.message); return; }
   l2RenderMap();
+
+  if (window.COMMUNITY_CHALLENGE && window.COMMUNITY_CHALLENGE.theme === 'despliegue') {
+    l2SetPhase('p1');
+    l2Hl('#l2-gates [data-gate="h"]', '#screen-level2 .cswap-tile', '#screen-level2 .slot');
+    L2.timer = Kit.timer(l2('l2-timer'));
+    await l2Say([
+      { t: `[RETO COMUNITARIO] ${window.COMMUNITY_CHALLENGE.title}: ${window.COMMUNITY_CHALLENGE.context}`, hold: 5000 },
+      { t: `OBJETIVO: ${window.COMMUNITY_CHALLENGE.target_desc}`, hi: 'Ensambla el Radar SWAP Test y clasifica las unidades.' }
+    ]);
+    return;
+  }
+
   await l2Say([
     { t: 'Los equipos de rescate están en el terreno, pero la biometría clásica está fallando por la interferencia.', hold: 3600 },
     { t: 'En el mapa: verde = operarios aptos, rojo = exhaustos. El punto gris es un escuadrón sin diagnóstico.', hold: 3800 },
@@ -387,6 +399,11 @@ function exitLevel2() {
   if (L2.timer) L2.timer.stop();
   L2.phase = 'done';
   l2('l2-win').classList.remove('open');
+  if (window.COMMUNITY_CHALLENGE) {
+    window.COMMUNITY_CHALLENGE = null;
+    const banner = $('#hud-community-banner');
+    if (banner) banner.style.display = 'none';
+  }
   renderMap(); show('screen-map');
 }
 l2('l2-exit').onclick = exitLevel2;

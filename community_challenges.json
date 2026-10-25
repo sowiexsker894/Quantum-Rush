@@ -1,0 +1,52 @@
+[
+  {
+    "id": "com-f12fb2",
+    "theme": "balance",
+    "title": "Prueba Criogenia",
+    "author": "Tester",
+    "context": "Falla de energia criogenica",
+    "target_desc": "Alcanzar 75% en canal A",
+    "target_val": 0.75,
+    "date": "2026-10-25"
+  },
+  {
+    "id": "com-1",
+    "theme": "balance",
+    "title": "Suministro Crítico Hospitalario",
+    "author": "Dra. S. Ramos",
+    "context": "Un hospital de campaña (Nodo A) y un centro de investigación (Nodo B) compiten por el generador cuántico. El hospital requiere el 85% de la carga energética constante y el centro solo el 15%.",
+    "target_desc": "Configura la probabilidad para que el Nodo A reciba el 85% (0.85) y Nodo B el 15% (0.15).",
+    "target_val": 0.85,
+    "date": "2026-10-25"
+  },
+  {
+    "id": "com-2",
+    "theme": "sintonia",
+    "title": "Cripto-Enlace Cuántico Satelital",
+    "author": "Ing. Aris Thorne",
+    "context": "Dos sondas orbitales deben verificar claves seguras sin intermediarios. Deben entrelazarse para lograr una correlación idéntica absoluta (100% de acuerdo).",
+    "target_desc": "Genera el estado entrelazado de Bell logrando 100% de acuerdo y correlación +1.00.",
+    "target_val": 1.0,
+    "date": "2026-10-25"
+  },
+  {
+    "id": "com-3",
+    "theme": "despliegue",
+    "title": "Clasificación de Drones de Reconocimiento",
+    "author": "Comandante Vane",
+    "context": "Varios drones autónomos regresaron dañados por radiación cósmica. Usa el radar SWAP Test y clasifícalos con KNN comparándolos contra firmas de vuelo sanas y comprometidas.",
+    "target_desc": "Diagnostica los drones sin etiquetar mediante comparación cuántica de fidelidad.",
+    "target_val": 1.0,
+    "date": "2026-10-25"
+  },
+  {
+    "id": "com-4",
+    "theme": "cosecha",
+    "title": "Detección de Plasma Inestable en Reactores",
+    "author": "Dra. H. Lin",
+    "context": "Los sensores del reactor tokamak captan lecturas no lineales de densidad y temperatura. Entrena una Red Neuronal Cuántica (VQC) para aislar las bolsas de plasma inestables.",
+    "target_desc": "Entrena el circuito variacional hasta superar el 90% de precisión.",
+    "target_val": 0.9,
+    "date": "2026-10-25"
+  }
+]

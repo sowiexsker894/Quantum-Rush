@@ -407,6 +407,227 @@ async function openLeaderboard() {
   }
 }
 
+// ---------------------------------------------------------------- RETOS DE LA COMUNIDAD
+window.COMMUNITY_CHALLENGE = null;
+
+const THEME_NAMES = {
+  balance: 'NIVEL 1 · EL BALANCE',
+  sintonia: 'NIVEL 2 · LA SINTONÍA',
+  despliegue: 'NIVEL 3 · EL DESPLIEGUE',
+  cosecha: 'NIVEL 4 · LA COSECHA'
+};
+
+const THEME_ACCENTS = {
+  balance: '#63d8e6',
+  sintonia: '#3ee08f',
+  despliegue: '#ffd36e',
+  cosecha: '#a98bff'
+};
+
+async function loadCommunityChallenges() {
+  const listEl = $('#community-list');
+  if (!listEl) return;
+  listEl.innerHTML = '<div style="text-align:center; padding:30px; color:#8e99c4;">Cargando retos de la comunidad...</div>';
+  try {
+    const challenges = await api('/api/community');
+    if (!challenges || !challenges.length) {
+      listEl.innerHTML = '<div style="text-align:center; padding:30px; color:#8e99c4;">No hay retos disponibles aún. ¡Crea el primero!</div>';
+      return;
+    }
+    listEl.innerHTML = challenges.map((ch, idx) => {
+      const accent = THEME_ACCENTS[ch.theme] || '#63d8e6';
+      const themeLabel = THEME_NAMES[ch.theme] || ch.theme.toUpperCase();
+      return `
+        <div class="community-challenge-card" data-idx="${idx}" style="background:rgba(10,18,44,0.7); border:1px solid rgba(142,153,196,0.25); border-left:4px solid ${accent}; border-radius:8px; padding:14px 16px; display:flex; flex-direction:column; gap:8px; transition:border-color 0.2s, background 0.2s;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-family:'Space Mono', monospace; font-size:0.7rem; color:${accent}; background:rgba(255,255,255,0.06); padding:2px 8px; border-radius:4px; font-weight:700;">
+                ${themeLabel}
+              </span>
+              <h4 style="margin:0; font-family:'Anton', sans-serif; font-size:1.15rem; color:#fff; letter-spacing:0.04em;">
+                ${ch.title}
+              </h4>
+            </div>
+            <span style="font-family:'Space Mono', monospace; font-size:0.72rem; color:#8e99c4;">
+              Por: <b style="color:#ffd36e;">${ch.author || 'Anónimo'}</b>
+            </span>
+          </div>
+          <p style="margin:0; font-size:0.86rem; color:#cbd5f0; line-height:1.45;">
+            ${ch.context}
+          </p>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:4px; padding-top:8px; border-top:1px dashed rgba(142,153,196,0.2);">
+            <div style="font-family:'Space Mono', monospace; font-size:0.75rem; color:#ffd36e; display:flex; align-items:center; gap:6px;">
+              <span>🎯 META:</span>
+              <span style="color:#fff;">${ch.target_desc || 'Objetivo cuántico del escenario'}</span>
+            </div>
+            <button class="lv-btn btn-play-community" data-id="${ch.id}" style="--accent:${accent}; padding:6px 14px; font-size:0.75rem;">
+              JUGAR RETO
+              <svg viewBox="0 0 24 24" style="width:14px; height:14px; margin-left:4px;"><path d="M4 12 H19 M13 6 L19 12 L13 18"/></svg>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    listEl.querySelectorAll('.btn-play-community').forEach(btn => {
+      btn.onclick = () => {
+        const id = btn.dataset.id;
+        const ch = challenges.find(c => c.id === id);
+        if (ch) launchCommunityChallenge(ch);
+      };
+    });
+  } catch (err) {
+    listEl.innerHTML = `<div style="text-align:center; padding:30px; color:#ff5c7a;">Error al cargar retos: ${err.message}</div>`;
+  }
+}
+
+function launchCommunityChallenge(ch) {
+  window.COMMUNITY_CHALLENGE = ch;
+  // Cerrar modal
+  const modal = $('#modal-community');
+  if (modal) modal.classList.remove('open');
+
+  // Configurar banner HUD flotante
+  const banner = $('#hud-community-banner');
+  const title = $('#hud-community-title');
+  const goal = $('#hud-community-goal');
+  if (banner && title && goal) {
+    title.textContent = ch.title;
+    goal.textContent = ch.target_desc;
+    banner.style.display = 'flex';
+  }
+
+  toast(`Iniciando Reto de la Comunidad: ${ch.title}`);
+
+  // Iniciar el nivel correspondiente al tema
+  if (ch.theme === 'balance') {
+    startLevel1();
+  } else if (ch.theme === 'sintonia') {
+    startLevelSintonia();
+  } else if (ch.theme === 'despliegue') {
+    startLevel2();
+  } else if (ch.theme === 'cosecha') {
+    startLevel3();
+  } else {
+    startLevel1();
+  }
+}
+
+function exitCommunityChallenge() {
+  window.COMMUNITY_CHALLENGE = null;
+  const banner = $('#hud-community-banner');
+  if (banner) banner.style.display = 'none';
+  toast('Has salido del Reto de la Comunidad');
+  renderMap();
+  show('screen-map');
+}
+
+// Botón de salir del banner
+const btnExitCommunity = $('#btn-exit-community-run');
+if (btnExitCommunity) btnExitCommunity.onclick = exitCommunityChallenge;
+
+// Botón de abrir retos de la comunidad en el header de misiones
+const btnCommunity = $('#btn-community');
+if (btnCommunity) {
+  btnCommunity.onclick = () => {
+    const modal = $('#modal-community');
+    if (modal) {
+      modal.classList.add('open');
+      loadCommunityChallenges();
+    }
+  };
+}
+
+// Botón para abrir el formulario de creación de reto
+const btnOpenCreate = $('#btn-open-create-challenge');
+const modalCreate = $('#modal-create-challenge');
+const modalCommunity = $('#modal-community');
+
+if (btnOpenCreate && modalCreate) {
+  btnOpenCreate.onclick = () => {
+    if (modalCommunity) modalCommunity.classList.remove('open');
+    modalCreate.classList.add('open');
+    updateTargetValGroup();
+  };
+}
+
+const btnCloseCreate = $('#btn-close-create-challenge');
+if (btnCloseCreate && modalCreate) {
+  btnCloseCreate.onclick = () => {
+    modalCreate.classList.remove('open');
+    if (modalCommunity) modalCommunity.classList.add('open');
+  };
+}
+
+const btnCancelCreate = $('#btn-cancel-create-challenge');
+if (btnCancelCreate && modalCreate) {
+  btnCancelCreate.onclick = () => {
+    modalCreate.classList.remove('open');
+    if (modalCommunity) modalCommunity.classList.add('open');
+  };
+}
+
+// Mostrar o no el campo de valor objetivo según el tema
+const themeSelect = $('#new-challenge-theme');
+const targetValGroup = $('#target-val-group');
+const targetValLabel = $('#target-val-label');
+
+function updateTargetValGroup() {
+  if (!themeSelect || !targetValGroup) return;
+  const t = themeSelect.value;
+  if (t === 'balance') {
+    targetValGroup.style.display = 'block';
+    if (targetValLabel) targetValLabel.textContent = 'PROBABILIDAD OBJETIVO P(A) (0.1 a 0.9):';
+  } else {
+    targetValGroup.style.display = 'none';
+  }
+}
+
+if (themeSelect) {
+  themeSelect.onchange = updateTargetValGroup;
+}
+
+// Enviar formulario de nuevo reto
+const formCreateChallenge = $('#form-create-challenge');
+if (formCreateChallenge) {
+  formCreateChallenge.onsubmit = async (e) => {
+    e.preventDefault();
+    const theme = $('#new-challenge-theme').value;
+    const title = $('#new-challenge-title').value.trim();
+    const author = $('#new-challenge-author').value.trim() || 'Operador Anónimo';
+    const context = $('#new-challenge-context').value.trim();
+    const target_desc = $('#new-challenge-target-desc').value.trim();
+    const target_val_input = $('#new-challenge-target-val');
+    const target_val = (theme === 'balance' && target_val_input) ? parseFloat(target_val_input.value) : null;
+
+    if (!title || !context || !target_desc) {
+      toast('Por favor completa todos los campos obligatorios');
+      return;
+    }
+
+    try {
+      await api('/api/community', {
+        theme,
+        title,
+        author,
+        context,
+        target_desc,
+        target_val
+      });
+      toast('¡Reto publicado con éxito!');
+      if (modalCreate) modalCreate.classList.remove('open');
+      if (modalCommunity) {
+        modalCommunity.classList.add('open');
+        loadCommunityChallenges();
+      }
+      formCreateChallenge.reset();
+      updateTargetValGroup();
+    } catch (err) {
+      toast('Error al publicar: ' + err.message);
+    }
+  };
+}
+
 const btnLeaderboard = $('#btn-leaderboard');
 if (btnLeaderboard) {
   btnLeaderboard.onclick = openLeaderboard;
@@ -415,6 +636,7 @@ if (btnLeaderboard) {
 const btnHome = document.getElementById('btn-home');
 if (btnHome) btnHome.onclick = () => {
   if (window.CHALLENGE_MODE) exitChallengeMode();
+  if (window.COMMUNITY_CHALLENGE) exitCommunityChallenge();
   show('screen-title');
 };
 const btnSeeBriefing = document.getElementById('btn-see-briefing');
@@ -425,3 +647,4 @@ if (document.readyState === 'loading') {
 } else {
   renderLevels();
 }
+

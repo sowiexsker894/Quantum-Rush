@@ -389,6 +389,19 @@ async function startLevel3() {
   Kit.ambient(true);
   try { L3.data = await api('/api/nivel3/data'); } catch (e) { toast('Error del servidor: ' + e.message); return; }
   requestAnimationFrame(() => l3Draw(null));
+
+  if (window.COMMUNITY_CHALLENGE && window.COMMUNITY_CHALLENGE.theme === 'cosecha') {
+    l3SetPhase('p1');
+    l3RenderGates();
+    l3Hl('#l3-gates .gate-tile', '#screen-level3 .slot');
+    L3.timer = Kit.timer(l3('l3-timer'));
+    await l3Say([
+      { t: `[RETO COMUNITARIO] ${window.COMMUNITY_CHALLENGE.title}: ${window.COMMUNITY_CHALLENGE.context}`, hold: 5000 },
+      { t: `OBJETIVO: ${window.COMMUNITY_CHALLENGE.target_desc}`, hi: 'Construye la red neuronal cuántica (VQC) y entrénala.' }
+    ]);
+    return;
+  }
+
   await l3Say([
     { t: 'Operador, la crisis afectó la cosecha de arándanos de exportación, vital para la economía de esta región.', hold: 3600 },
     { t: 'Las cámaras detectan hongos y magulladuras internas: azul = sanos, rojo = dañados.', hold: 3200 },
@@ -408,6 +421,11 @@ function exitLevel3() {
   if (L3.timer) L3.timer.stop();
   L3.phase = 'done';
   l3('l3-win').classList.remove('open');
+  if (window.COMMUNITY_CHALLENGE) {
+    window.COMMUNITY_CHALLENGE = null;
+    const banner = $('#hud-community-banner');
+    if (banner) banner.style.display = 'none';
+  }
   renderMap(); show('screen-map');
 }
 l3('l3-exit').onclick = exitLevel3;

@@ -329,6 +329,17 @@ async function startLevelSintonia() {
   show('screen-sintonia');
   Kit.ambient(true);
 
+  if (window.COMMUNITY_CHALLENGE && window.COMMUNITY_CHALLENGE.theme === 'sintonia') {
+    lsSetPhase('p1');
+    lsHl('#ls-gates [data-gate="h"]', '#screen-sintonia .slot[data-slot="0"]');
+    LS.timer = Kit.timer(ls('ls-timer'));
+    await lsSay([
+      { t: `[RETO COMUNITARIO] ${window.COMMUNITY_CHALLENGE.title}: ${window.COMMUNITY_CHALLENGE.context}`, hold: 5000 },
+      { t: `OBJETIVO: ${window.COMMUNITY_CHALLENGE.target_desc}`, hi: 'Conecta las balizas cuánticas con entrelazamiento CNOT.' }
+    ]);
+    return;
+  }
+
   await lsSay([
     { t: 'Operador, antes de enviar los escuadrones necesitamos asegurar las comunicaciones entre el sector Binara y la base.', hold: 3800 },
     { t: 'Tenemos dos balizas cuánticas: Baliza Alfa (q0) y Baliza Beta (q1). Si toman decisiones descoordinadas, el enlace colapsa.', hold: 4200 },
@@ -348,6 +359,11 @@ function exitLevelSintonia() {
   if (LS.timer) LS.timer.stop();
   LS.phase = 'done';
   ls('ls-win').classList.remove('open');
+  if (window.COMMUNITY_CHALLENGE) {
+    window.COMMUNITY_CHALLENGE = null;
+    const banner = $('#hud-community-banner');
+    if (banner) banner.style.display = 'none';
+  }
   renderMap();
   show('screen-map');
 }

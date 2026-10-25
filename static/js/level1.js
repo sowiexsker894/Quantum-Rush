@@ -233,6 +233,22 @@ function l1Animate(r) {
 function l1Evaluate(r, measuredA) {
   const A = r.theory.A;
   const pct = x => Math.round(x * 100) + '%';
+
+  // Soporte para Reto de la Comunidad con objetivo numérico personalizado
+  if (window.COMMUNITY_CHALLENGE && window.COMMUNITY_CHALLENGE.theme === 'balance') {
+    const chTarget = (typeof window.COMMUNITY_CHALLENGE.target_val === 'number' && !isNaN(window.COMMUNITY_CHALLENGE.target_val))
+      ? window.COMMUNITY_CHALLENGE.target_val
+      : 0.8;
+    const okTheory = Math.abs(A - chTarget) <= 0.03, okMeasured = Math.abs(measuredA - chTarget) <= 0.05;
+    if (okTheory && okMeasured) {
+      return l1Win(measuredA);
+    }
+    if (A > chTarget) {
+      return l1Say([{ t: `La probabilidad en A es ${pct(measuredA)}. Supera la meta del reto (${pct(chTarget)}).`, hi: 'Ajusta el circuito o gira el ángulo para calibrar.' }]);
+    }
+    return l1Say([{ t: `La probabilidad en A es ${pct(measuredA)}. La meta del reto es ${pct(chTarget)}.`, hi: 'Ajusta las compuertas o el ángulo θ.' }]);
+  }
+
   if (L1.phase === 'p1') {
     if (Math.abs(A - 0.5) < 0.01) return l1Phase1Done(measuredA);
     if (!l1Circuit().length) return l1Say([{ t: 'Sin compuertas, el [[qubit]] se queda en |0⟩: TODA la energía va al País A. ¡El País B queda a oscuras!', hi: 'Prueba colocando la compuerta H.' }]);
@@ -338,6 +354,17 @@ async function startLevel1() {
   show('screen-level1');
   Kit.ambient(true);
 
+  if (window.COMMUNITY_CHALLENGE && window.COMMUNITY_CHALLENGE.theme === 'balance') {
+    l1SetPhase('p2'); // Permite usar Ry directamente
+    l1Highlight('#l1-gates [data-gate="ry"]', '#l1-gates [data-gate="h"]', '#screen-level1 .slot');
+    L1.timer = Kit.timer(l1('l1-timer'));
+    await l1Say([
+      { t: `[RETO COMUNITARIO] ${window.COMMUNITY_CHALLENGE.title}: ${window.COMMUNITY_CHALLENGE.context}`, hold: 5000 },
+      { t: `OBJETIVO: ${window.COMMUNITY_CHALLENGE.target_desc}`, hi: 'Arma tu circuito y calibra la probabilidad requerida.' }
+    ]);
+    return;
+  }
+
   await l1Say([
     { t: '¡Mis sistemas están descalibrados! Estoy enviando el 90% de la energía de rescate al País A y solo el 10% al País B.', hold: 4200 },
     { t: 'Los dos países necesitan la misma atención. Mira mi [[circuito]] cuántico: está vacío.', hold: 3200 },
@@ -356,6 +383,11 @@ function exitLevel1() {
   clearInterval(L1.timerId);
   L1.phase = 'done';
   l1('l1-win').classList.remove('open');
+  if (window.COMMUNITY_CHALLENGE) {
+    window.COMMUNITY_CHALLENGE = null;
+    const banner = $('#hud-community-banner');
+    if (banner) banner.style.display = 'none';
+  }
   renderMap();
   show('screen-map');
 }
