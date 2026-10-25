@@ -317,7 +317,7 @@ async function startLevel1() {
   Object.assign(L1, { slots: [null, null], theta: 0, hints: 0, shots: 0, busy: false, saidRun: false, saidRy: false });
   clearInterval(L1.timerId);
   l1('l1-theta').value = 0; l1('l1-theta-val').textContent = '0°';
-  l1('l1-win').classList.remove('open');
+  document.querySelectorAll('#screen-level1 .modal.open').forEach(m => m.classList.remove('open'));
   l1('l1-quake').classList.remove('on');
   l1('l1-alert').classList.remove('on');
   l1('l1-packets').innerHTML = '';
@@ -350,12 +350,13 @@ function exitLevel1() {
   Kit.ambient(false);
   clearInterval(L1.timerId);
   L1.phase = 'done';
-  l1('l1-win').classList.remove('open');
+  document.querySelectorAll('#screen-level1 .modal.open').forEach(m => m.classList.remove('open'));
   renderMap();
   show('screen-map');
 }
 l1('l1-exit').onclick = exitLevel1;
-l1('l1-next').onclick = exitLevel1;
+l1('l1-missions').onclick = exitLevel1;
+l1('l1-next').onclick = () => { exitLevel1(); startLevel2(); };
 l1('l1-retry').onclick = () => startLevel1();
 l1('l1-code-btn').onclick = () => l1('l1-code-modal').classList.add('open');
 

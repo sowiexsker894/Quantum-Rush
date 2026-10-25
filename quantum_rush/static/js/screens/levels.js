@@ -136,7 +136,7 @@ function renderLevels() {
       </article>`;
   }).join('');
 
-  $$('.lv-btn:not([disabled])').forEach(b => b.onclick = () => LEVELS[+b.dataset.i].start());
+  $$('#planet-grid .lv-btn:not([disabled])').forEach(b => b.onclick = () => LEVELS[+b.dataset.i].start());
 }
 
 document.getElementById('btn-home').onclick = () => show('screen-title');

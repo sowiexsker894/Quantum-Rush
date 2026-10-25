@@ -346,7 +346,7 @@ async function startLevel2() {
   Object.assign(L2, { slots: [null, null, null], hints: 0, scans: 0, mistakes: 0, busy: false, saidRun: false,
     saidFirstLink: false, firstDone: false, grays: null, links: [], drag: null, selected: null });
   if (L2.timer) L2.timer.stop();
-  l2('l2-win').classList.remove('open');
+  document.querySelectorAll('#screen-level2 .modal.open').forEach(m => m.classList.remove('open'));
   l2('l2-timer').textContent = '00:00';
   l2('l2-run').disabled = false;
   l2SetSim(null, 'El monitor mostrará la lectura del radar.');
@@ -372,11 +372,12 @@ function exitLevel2() {
   l2Say.cancel(); Kit.ambient(false);
   if (L2.timer) L2.timer.stop();
   L2.phase = 'done';
-  l2('l2-win').classList.remove('open');
+  document.querySelectorAll('#screen-level2 .modal.open').forEach(m => m.classList.remove('open'));
   renderMap(); show('screen-map');
 }
 l2('l2-exit').onclick = exitLevel2;
-l2('l2-next').onclick = exitLevel2;
+l2('l2-missions').onclick = exitLevel2;
+l2('l2-next').onclick = () => { exitLevel2(); startLevel3(); };
 l2('l2-retry').onclick = () => startLevel2();
 
 if (new URLSearchParams(location.search).get('pantalla') === 'nivel2') startLevel2();

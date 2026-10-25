@@ -362,7 +362,7 @@ async function startLevel3() {
     busy: false, locked: false, optimizer: false, saidBuilt: false, offeredOptim: false, lossHistory: [], lastGrid: null, lastWrong: null });
   clearTimeout(L3.offerTimer);
   if (L3.timer) L3.timer.stop();
-  l3('l3-win').classList.remove('open');
+  document.querySelectorAll('#screen-level3 .modal.open').forEach(m => m.classList.remove('open'));
   l3('l3-timer').textContent = '00:00';
   l3('l3-run').disabled = false;
   l3Optim.disabled = true; l3Optim.classList.remove('attached');
@@ -393,11 +393,11 @@ function exitLevel3() {
   clearTimeout(L3.offerTimer);
   if (L3.timer) L3.timer.stop();
   L3.phase = 'done';
-  l3('l3-win').classList.remove('open');
+  document.querySelectorAll('#screen-level3 .modal.open').forEach(m => m.classList.remove('open'));
   renderMap(); show('screen-map');
 }
 l3('l3-exit').onclick = exitLevel3;
-l3('l3-next').onclick = exitLevel3;
+l3('l3-missions').onclick = exitLevel3;
 l3('l3-retry').onclick = () => startLevel3();
 
 if (new URLSearchParams(location.search).get('pantalla') === 'nivel3') startLevel3();
