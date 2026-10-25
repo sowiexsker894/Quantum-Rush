@@ -24,10 +24,11 @@
   {% include 'screens/level3.html' %}
   {% include 'components/global.html' %}
 
-  <!-- Núcleo: utilidades, diccionario y kit de niveles -->
+  <!-- Núcleo: utilidades, diccionario, sonido y música -->
   <script src="{{ url_for('static', filename='js/core/glossary.js') }}"></script>
   <script src="{{ url_for('static', filename='js/core/app.js') }}"></script>
   <script src="{{ url_for('static', filename='js/core/levelkit.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/core/music.js') }}"></script>
   <!-- Pantallas -->
   <script src="{{ url_for('static', filename='js/screens/levels.js') }}"></script>
   <script src="{{ url_for('static', filename='js/screens/landing.js') }}"></script>

@@ -81,5 +81,6 @@ $$('[data-close]').forEach(b => b.onclick = () => b.closest('.modal').classList.
 // ---------------------------------------------------------------- Pantallas
 function show(id) {
   $$('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+  document.dispatchEvent(new CustomEvent('qr-screen', { detail: id }));
 }
 $('#btn-start').onclick = () => playIntro();

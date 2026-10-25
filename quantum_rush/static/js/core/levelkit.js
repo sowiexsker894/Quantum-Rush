@@ -73,6 +73,7 @@ const Kit = (() => {
     try { localStorage.setItem('qr-muted', m ? '1' : '0'); } catch { /* sin almacenamiento */ }
     if (master) master.gain.value = m ? 0 : 0.5;
     document.querySelectorAll('.sound-btn').forEach(b => b.classList.toggle('muted', m));
+    document.dispatchEvent(new CustomEvent('qr-mute', { detail: m }));
   }
   document.querySelectorAll('.sound-btn').forEach(b => {
     b.classList.toggle('muted', muted);
@@ -150,5 +151,5 @@ const Kit = (() => {
   const stars = n => [1, 2, 3].map(s => `<svg viewBox="0 0 24 24" class="${s <= n ? 'on' : ''}">${STAR}</svg>`).join('');
   const starsFor = hints => hints === 0 ? 3 : hints === 1 ? 2 : 1;
 
-  return { sfx, ambient, makeSay, highlight, timer, openGlossary, stars, starsFor };
+  return { sfx, ambient, isMuted: () => muted, makeSay, highlight, timer, openGlossary, stars, starsFor };
 })();

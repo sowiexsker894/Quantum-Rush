@@ -263,3 +263,14 @@
   .briefing-robot { order: -1; max-width: 260px; justify-self: center; }
   .objectives { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Botón de música (esquina superior derecha de la landing y del mapa) */
+.nav-sound { width: 38px; height: 38px; margin-left: 18px; display: grid; place-items: center; cursor: pointer; flex: none;
+  background: rgba(99, 216, 230, .08); border: 1px solid rgba(99, 216, 230, .45); border-radius: 50%; transition: background .2s, border-color .2s; }
+.nav-sound:hover { background: rgba(99, 216, 230, .2); }
+.nav-sound svg { width: 20px; fill: none; stroke: var(--cyan); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.nav-sound.muted { border-color: rgba(255, 107, 129, .6); }
+.nav-sound.muted svg { stroke: #ff6b81; }
+.nav-sound.muted .waves { display: none; }
+.nav-sound.muted::after { content: ''; position: absolute; width: 22px; height: 2px; background: #ff6b81; transform: rotate(-45deg); border-radius: 2px; }
+.nav-sound { position: relative; }

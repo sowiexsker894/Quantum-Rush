@@ -7,5 +7,9 @@
   </div>
 </div>
 
+{% if menu_music %}
+<audio id="menu-music" src="{{ url_for('static', filename=menu_music) }}" loop preload="auto"></audio>
+{% endif %}
+
 <div class="tooltip" id="tooltip"></div>
 <div class="toast" id="toast"></div>
