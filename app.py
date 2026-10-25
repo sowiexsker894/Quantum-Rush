@@ -19,7 +19,11 @@ ERRORS = (ValueError, KeyError, TypeError, AttributeError, QiskitError)
 import json
 import re
 
-LEADERBOARD_FILE = os.path.join(BASE_DIR, "leaderboard.json")
+# En Vercel Serverless el sistema de archivos raíz es de solo lectura, por lo que usamos /tmp
+if os.environ.get("VERCEL"):
+    LEADERBOARD_FILE = os.path.join("/tmp", "leaderboard.json")
+else:
+    LEADERBOARD_FILE = os.path.join(BASE_DIR, "leaderboard.json")
 
 def load_leaderboard():
     if not os.path.exists(LEADERBOARD_FILE):
