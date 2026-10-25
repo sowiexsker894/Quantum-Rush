@@ -1,0 +1,49 @@
+<!-- ========== OBJETIVOS DE LA MISIÓN ========== -->
+<section id="screen-briefing" class="screen briefing">
+  <div class="briefing-body">
+    <div class="briefing-copy">
+      <p class="kicker"><span class="kicker-line"></span> BRIEFING DE MISIÓN</p>
+      <h2 class="briefing-title">TU <span>MISIÓN</span></h2>
+      <p class="hero-text">NOVA no puede solo. En cada planeta hay una emergencia distinta y tú decidirás cómo resolverla.</p>
+
+      <ol class="objectives">
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M4 5 H20 V16 H11 L6 20 V16 H4 Z"/></svg>
+          <div><b>Escucha a NOVA</b><span>Te explica el problema de cada planeta con palabras simples.</span></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-60 12 12)"/></svg>
+          <div><b>Usa compuertas cuánticas</b><span>Controla qubits para cambiar probabilidades y resolver la emergencia.</span></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M4 19 V5 M4 19 H20"/><path d="M7 15 L11 10 L14 13 L19 7"/></svg>
+          <div><b>Mide y analiza los datos</b><span>Repite experimentos y usa la estadística para saber si lo lograste.</span></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2 V6 M15 2 V6 M9 18 V22 M15 18 V22 M2 9 H6 M2 15 H6 M18 9 H22 M18 15 H22"/></svg>
+          <div><b>Entrena tu IA</b><span>En la misión final enseñas a una IA cuántica a tomar decisiones sola.</span></div>
+        </li>
+      </ol>
+
+      <div class="win-rule">
+        <svg viewBox="0 0 24 24"><path d="M12 2 L14.6 8.6 L21.5 9.2 L16.2 13.8 L17.8 20.6 L12 17 L6.2 20.6 L7.8 13.8 L2.5 9.2 L9.4 8.6 Z"/></svg>
+        <p><b>Cómo ganar:</b> completa las misiones de cada planeta. Ganas hasta <b>3 estrellas</b>: mientras menos pistas uses, más estrellas.</p>
+      </div>
+
+      <button class="btn-launch" id="btn-to-map">
+        <svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z"/></svg>
+        ACEPTAR MISIÓN
+        <svg viewBox="0 0 24 24" class="arrow"><path d="M4 12 H19 M13 6 L19 12 L13 18"/></svg>
+      </button>
+      <button class="btn-text" id="btn-replay">Ver la historia otra vez</button>
+    </div>
+    <div class="briefing-robot" aria-hidden="true">
+      <div class="robot">
+        <img src="{{ url_for('static', filename='img/characters/nova-robot.png') }}" alt="">
+        <span class="beam beam-blue"></span>
+        <span class="beam beam-gold"></span>
+      </div>
+      <div class="holo-ring"></div>
+    </div>
+  </div>
+</section>

@@ -1,6 +1,8 @@
 .git
 __pycache__
 *.pyc
-referencias/
 .venv
 venv
+.pytest_cache
+docs/
+tests/

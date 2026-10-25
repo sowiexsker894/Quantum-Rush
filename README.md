@@ -99,7 +99,7 @@ En la terminal del servidor presiona **Ctrl + C**.
 
 Accesos directos útiles para presentar:
 
-- `?pantalla=niveles` → selección de niveles (en la demo todos están abiertos: `DEMO_MODE` en `static/js/game.js`).
+- `?pantalla=niveles` → selección de niveles (en la demo todos están abiertos: `DEMO_MODE` en `quantum_rush/static/js/core/app.js`).
 - `?pantalla=nivel1`, `?pantalla=nivel2`, `?pantalla=nivel3` → abre un nivel directamente.
 
 ## Niveles (Proyecto NOVA)
@@ -112,10 +112,64 @@ Accesos directos útiles para presentar:
 
 Cada nivel tiene cronómetro, sonido, pistas, diccionario de términos y el botón **VER CÓDIGO QISKIT**.
 
-## Cómo está hecho
+## Estructura del proyecto
 
-- **Qiskit en el backend** para todos los cálculos cuánticos. Detalle completo en [QISKIT.md](QISKIT.md).
-- `app.py`: servidor Flask con la API de cada nivel.
-- `quantum_engine.py` (Nivel 1) y `levels_engine.py` (Niveles 2 y 3): motores cuánticos.
-- `templates/index.html` + `static/js/`: landing, video de historia, objetivos, niveles (`level1.js`, `level2.js`, `level3.js`, `levelkit.js`).
-- `static/js/chapters.js`: diccionario de términos (`GLOSSARY`).
+```
+Quantum-Rush/
+├── app.py                      # Punto de entrada: python app.py
+├── quantum_rush/               # Paquete de la aplicación
+│   ├── __init__.py             # create_app(): crea la app Flask
+│   ├── api.py                  # API JSON (/api/nivel1, /api/nivel2/..., /api/nivel3/...)
+│   ├── quantum/                # Motores cuánticos (todo con Qiskit)
+│   │   ├── common.py           #   utilidades: construir circuitos, disparos, diagramas
+│   │   ├── level1_balance.py   #   Nivel 1: superposición y rotación Ry
+│   │   ├── level2_swap_test.py #   Nivel 2: SWAP test + KNN
+│   │   └── level3_vqc.py       #   Nivel 3: clasificador variacional + parameter shift
+│   ├── templates/
+│   │   ├── index.html          # Página única: incluye las pantallas
+│   │   ├── screens/            # Una plantilla por pantalla (landing, intro, niveles, nivel1-3...)
+│   │   └── components/         # Diccionario, tooltip y avisos
+│   └── static/
+│       ├── css/                # base.css + screens/ + levels/
+│       ├── js/
+│       │   ├── core/           # app.js (API, progreso, navegación), glossary.js, levelkit.js
+│       │   ├── screens/        # landing.js, intro.js, levels.js
+│       │   └── levels/         # level1.js, level2.js, level3.js
+│       ├── img/                # characters/ (NOVA) y scenes/ (fondos de cada nivel)
+│       └── video/              # mision.mp4 (historia al presionar DESPEGAR)
+├── tests/                      # Pruebas automáticas (pytest)
+├── docs/
+│   ├── QISKIT.md               # Cómo se usa Qiskit en cada nivel
+│   └── referencias/            # Imágenes y videos de diseño (no se usan en el juego)
+├── requirements.txt            # Dependencias para ejecutar el juego
+├── requirements-dev.txt        # + herramientas de desarrollo (pytest)
+└── pyproject.toml              # Metadatos y configuración de pytest
+```
+
+### Flujo de una jugada
+
+1. El jugador arma un circuito en el navegador (`static/js/levels/levelN.js`).
+2. El navegador lo envía a la API (`quantum_rush/api.py`).
+3. El motor del nivel lo simula con Qiskit (`quantum_rush/quantum/`).
+4. El navegador anima el resultado.
+
+Detalle completo en [docs/QISKIT.md](docs/QISKIT.md).
+
+### Dónde cambiar cosas
+
+| Quiero cambiar... | Archivo |
+|---|---|
+| Diálogos y fases de un nivel | `quantum_rush/static/js/levels/levelN.js` |
+| Botones y textos fijos de una pantalla | `quantum_rush/templates/screens/*.html` |
+| Definiciones del diccionario | `quantum_rush/static/js/core/glossary.js` |
+| Datos o física cuántica de un nivel | `quantum_rush/quantum/levelN_*.py` |
+| Tarjetas de la selección de niveles | `quantum_rush/static/js/screens/levels.js` |
+
+## Pruebas automáticas
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest
+```
+
+Las pruebas verifican la física de cada nivel (por ejemplo: H da 50/50, Ry(53°) da 80/20, el SWAP test cumple (1 + F)/2 y el entrenamiento llega a 90% o más) y que la API responde bien.

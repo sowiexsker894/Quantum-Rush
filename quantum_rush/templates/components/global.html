@@ -1,0 +1,49 @@
+<!-- ========== COMPONENTES GLOBALES: objetivos, diccionario, tooltip y avisos ========== -->
+<!-- Objetivos de aprendizaje: se llenan desde static/js/core/objectives.js antes de cada nivel -->
+<div class="modal" id="modal-objectives">
+  <div class="modal-card obj-card" role="dialog" aria-modal="true" aria-label="Objetivos del nivel">
+    <button class="obj-x" data-obj-close aria-label="Cerrar"><svg viewBox="0 0 24 24"><path d="M6 6 L18 18 M18 6 L6 18"/></svg></button>
+    <div class="obj-body">
+      <p class="kicker obj-kicker"></p>
+      <h2 class="briefing-title obj-title"></h2>
+      <p class="obj-mission"></p>
+
+      <h3 class="obj-h">Al terminar este nivel podrás:</h3>
+      <ol class="obj-goals"></ol>
+
+      <h3 class="obj-h">Qué vas a practicar</h3>
+      <div class="obj-areas"></div>
+
+      <div class="obj-two">
+        <div>
+          <h3 class="obj-h">Cómo se juega</h3>
+          <ol class="obj-steps"></ol>
+        </div>
+        <div>
+          <h3 class="obj-h">En el mundo real</h3>
+          <p class="obj-world"></p>
+          <p class="obj-stars"><b>Estrellas:</b> 3 sin pistas · 2 con una pista · 1 con más pistas. Pasa el mouse sobre las palabras subrayadas para ver su significado.</p>
+        </div>
+      </div>
+    </div>
+    <div class="obj-foot">
+      <button class="lv-btn obj-go" data-obj-close>ENTENDIDO, COMENZAR MISIÓN
+        <svg viewBox="0 0 24 24"><path d="M4 12 H19 M13 6 L19 12 L13 18"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-glossary">
+  <div class="modal-card wide l1-modal glossary-card">
+    <h2>Diccionario de NOVA</h2>
+    <dl id="glossary-list"></dl>
+    <button class="btn btn-primary" data-close>Cerrar</button>
+  </div>
+</div>
+
+{% if menu_music %}
+<audio id="menu-music" src="{{ url_for('static', filename=menu_music) }}" loop preload="auto"></audio>
+{% endif %}
+
+<div class="tooltip" id="tooltip"></div>
+<div class="toast" id="toast"></div>

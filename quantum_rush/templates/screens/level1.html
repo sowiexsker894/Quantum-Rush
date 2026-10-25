@@ -1,0 +1,142 @@
+<!-- ========== NIVEL 1: EL BALANCE ========== -->
+<section id="screen-level1" class="screen lvl">
+  <header class="lvl-hud">
+    <button class="hud-btn" id="l1-exit">
+      <svg viewBox="0 0 24 24"><path d="M20 12 H5 M11 6 L5 12 L11 18"/></svg> MISIONES
+    </button>
+    <div class="hud-title"><span>NIVEL 01</span> EL BALANCE</div>
+    <div class="hud-phase" id="l1-phase">BRIEFING</div>
+    <div class="hud-right">
+      <button class="hud-btn" id="l1-dict"><svg viewBox="0 0 24 24"><path d="M4 4 H10 A2 2 0 0 1 12 6 V20 A2 2 0 0 0 10 18 H4 Z M20 4 H14 A2 2 0 0 0 12 6 V20 A2 2 0 0 1 14 18 H20 Z"/></svg> DICCIONARIO</button>
+      <button class="hud-btn sound-btn" aria-label="Sonido"><svg viewBox="0 0 24 24"><path d="M4 9 H8 L13 5 V19 L8 15 H4 Z"/><path class="waves" d="M16.5 8.5 C18.5 10.5 18.5 13.5 16.5 15.5 M19 6 C22.3 9.3 22.3 14.7 19 18"/></svg></button>
+      <button class="hud-btn" id="l1-hint">
+        <svg viewBox="0 0 24 24"><path d="M9 18 H15 M10 21 H14 M12 3 A6 6 0 0 1 16 13.5 C15 14.5 15 15.5 15 16 H9 C9 15.5 9 14.5 8 13.5 A6 6 0 0 1 12 3 Z"/></svg> PISTA
+      </button>
+      <div class="hud-timer"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9 V13 L15 15 M9 2 H15"/></svg><span id="l1-timer">00:00</span></div>
+    </div>
+  </header>
+
+  <div class="lvl-layout">
+    <!-- Panel de controles (izquierda) -->
+    <aside class="lvl-panel">
+      <section class="pcard">
+        <h3><svg viewBox="0 0 24 24" class="pc-ico"><path d="M4 20 V12 M10 20 V8 M16 20 V4 M3 20 H21"/></svg> PROBABILIDAD ACTUAL</h3>
+        <div class="prob-row">
+          <i class="pdot a"></i><span class="pname">País A</span>
+          <div class="pbar"><div class="pfill a" id="l1-bar-a"></div><i class="ptarget" id="l1-tgt-a"></i></div>
+          <b id="l1-val-a">0.90</b>
+        </div>
+        <div class="prob-row">
+          <i class="pdot b"></i><span class="pname">País B</span>
+          <div class="pbar"><div class="pfill b" id="l1-bar-b"></div><i class="ptarget" id="l1-tgt-b"></i></div>
+          <b id="l1-val-b">0.10</b>
+        </div>
+        <p class="pc-note" id="l1-source">Configuración actual de NOVA (descalibrada)</p>
+      </section>
+
+      <section class="pcard">
+        <h3><svg viewBox="0 0 24 24" class="pc-ico"><path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z M3 7 L12 12 L21 7 M12 12 V22"/></svg> COMPUERTAS CUÁNTICAS</h3>
+        <div class="gate-grid" id="l1-gates"></div>
+        <p class="pc-note">Arrastra una compuerta al circuito (o haz clic en ella).</p>
+      </section>
+
+      <section class="pcard">
+        <h3><svg viewBox="0 0 24 24" class="pc-ico"><path d="M3 7 H21 M3 17 H21 M8 4 V10 M16 14 V20"/></svg> CIRCUITO CUÁNTICO
+          <button class="code-link" id="l1-code-btn">VER CÓDIGO QISKIT</button></h3>
+        <div class="qcircuit">
+          <span class="ket">|0⟩</span>
+          <span class="wire"></span>
+          <div class="slot" data-slot="0"><span class="plus">+</span></div>
+          <span class="wire"></span>
+          <div class="slot" data-slot="1"><span class="plus">+</span></div>
+          <span class="wire"></span>
+          <div class="meter-box">
+            <svg viewBox="0 0 24 24"><path d="M4 16 A8 8 0 0 1 20 16"/><path d="M12 16 L16 9"/></svg>
+            <small>M</small>
+          </div>
+        </div>
+        <div class="angle-box" id="l1-angle-box">
+          <label for="l1-theta">Ángulo de rotación (θ)</label>
+          <div class="angle-row">
+            <input type="range" id="l1-theta" min="0" max="180" step="1" value="0" disabled>
+            <output id="l1-theta-val">0°</output>
+          </div>
+          <p class="predict" id="l1-predict">Coloca la compuerta Ry para usar el ángulo.</p>
+        </div>
+        <button class="run-btn" id="l1-run">
+          <svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z"/></svg> EJECUTAR CIRCUITO
+        </button>
+      </section>
+    </aside>
+
+    <!-- Escena (derecha) -->
+    <main class="lvl-scene">
+      <div class="scene-frame" id="l1-frame">
+        <img src="{{ url_for('static', filename='img/scenes/nivel1.jpg') }}" alt="NOVA proyectando energía hacia el País A y el País B">
+        <svg viewBox="0 0 1100 943" class="scene-fx" id="l1-fx">
+          <defs>
+            <linearGradient id="beamA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ee6ff"/><stop offset="1" stop-color="#2f8bff" stop-opacity="0"/></linearGradient>
+            <linearGradient id="beamB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b0"/><stop offset="1" stop-color="#ffb02e" stop-opacity="0"/></linearGradient>
+            <radialGradient id="glowA"><stop offset="0" stop-color="#4fb4ff" stop-opacity=".7"/><stop offset="1" stop-color="#4fb4ff" stop-opacity="0"/></radialGradient>
+            <radialGradient id="glowB"><stop offset="0" stop-color="#ffc24a" stop-opacity=".7"/><stop offset="1" stop-color="#ffc24a" stop-opacity="0"/></radialGradient>
+            <radialGradient id="dark"><stop offset="0" stop-color="#02040f" stop-opacity=".85"/><stop offset="1" stop-color="#02040f" stop-opacity="0"/></radialGradient>
+          </defs>
+          <ellipse cx="300" cy="690" rx="230" ry="95" fill="url(#glowA)" id="l1-glow-a"/>
+          <ellipse cx="835" cy="690" rx="220" ry="95" fill="url(#glowB)" id="l1-glow-b"/>
+          <ellipse cx="300" cy="690" rx="200" ry="80" fill="url(#dark)" id="l1-dark-a"/>
+          <ellipse cx="835" cy="690" rx="190" ry="80" fill="url(#dark)" id="l1-dark-b"/>
+          <polygon points="612,398 632,410 520,600 270,600" fill="url(#beamA)" class="beam-fx" id="l1-beam-a"/>
+          <polygon points="735,430 758,438 930,620 735,620" fill="url(#beamB)" class="beam-fx" id="l1-beam-b"/>
+          <g id="l1-quake" class="quake">
+            <circle cx="300" cy="680" r="40"/><circle cx="300" cy="680" r="40" class="d2"/><circle cx="300" cy="680" r="40" class="d3"/>
+          </g>
+          <g id="l1-packets"></g>
+        </svg>
+
+        <div class="nova-bubble" id="l1-bubble">
+          <span class="nb-tag">NOVA</span>
+          <p id="l1-say"></p>
+          <p class="nb-hi" id="l1-say-hi"></p>
+          <span class="nb-skip">clic para continuar</span>
+        </div>
+
+        <div class="country-label a"><i class="pdot a"></i><span id="l1-lbl-a">P(A) = 0.90</span></div>
+        <div class="country-label b"><i class="pdot b"></i><span id="l1-lbl-b">P(B) = 0.10</span></div>
+
+        <div class="alert-flash" id="l1-alert"><span>ALERTA SÍSMICA · PAÍS A</span></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Código Qiskit -->
+  <div class="modal" id="l1-code-modal">
+    <div class="modal-card wide l1-modal">
+      <p class="kicker"><span class="kicker-line"></span> LO QUE EJECUTÓ EL SERVIDOR CON QISKIT</p>
+      <pre id="l1-diagram">Todavía no has ejecutado el circuito.</pre>
+      <pre id="l1-code"></pre>
+      <button class="lv-btn" data-close style="--accent:#63d8e6">CERRAR</button>
+    </div>
+  </div>
+
+  <!-- Nivel completado -->
+  <div class="modal" id="l1-win">
+    <div class="modal-card l1-modal">
+      <p class="kicker"><span class="kicker-line"></span> NIVEL 01 COMPLETADO</p>
+      <h2 class="briefing-title">DISTRIBUCIÓN <span>ÓPTIMA</span></h2>
+      <div class="l1-stars" id="l1-stars"></div>
+      <div class="l1-stats" id="l1-stats"></div>
+      <ul class="l1-learned">
+        <li><b>H (Hadamard)</b> divide los resultados exactamente a la mitad: crea <b>superposición</b>.</li>
+        <li><b>Ry (rotación)</b> te da el control: el ángulo θ fija la probabilidad que quieras.</li>
+        <li>No controlamos el destino de un solo paquete, sino la <b>probabilidad de todo el sistema</b>.</li>
+      </ul>
+      <div class="l1-actions">
+        <button class="btn-text" id="l1-retry">Repetir nivel</button>
+        <div class="act-right">
+          <button class="btn-text" id="l1-missions">Volver a misiones</button>
+          <button class="lv-btn" id="l1-next" style="--accent:#63d8e6">SIGUIENTE NIVEL <svg viewBox="0 0 24 24"><path d="M4 12 H19 M13 6 L19 12 L13 18"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

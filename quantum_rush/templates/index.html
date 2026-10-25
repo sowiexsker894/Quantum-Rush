@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quantum Rush</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Nunito:wght@400;600;800&family=Anton&family=Saira+Condensed:wght@600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/screens/landing.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/screens/levels.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/levels/common.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/levels/level2-3.css') }}">
+</head>
+<body>
+  <canvas id="stars"></canvas>
+
+  {% include 'screens/landing.html' %}
+  {% include 'screens/intro.html' %}
+  {% include 'screens/briefing.html' %}
+  {% include 'screens/levels.html' %}
+  {% include 'screens/level1.html' %}
+  {% include 'screens/level2.html' %}
+  {% include 'screens/level3.html' %}
+  {% include 'components/global.html' %}
+
+  <!-- Núcleo: utilidades, diccionario, sonido y música -->
+  <script src="{{ url_for('static', filename='js/core/glossary.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/core/app.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/core/levelkit.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/core/objectives.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/core/music.js') }}"></script>
+  <!-- Pantallas -->
+  <script src="{{ url_for('static', filename='js/screens/levels.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/screens/landing.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/screens/intro.js') }}"></script>
+  <!-- Niveles -->
+  <script src="{{ url_for('static', filename='js/levels/level1.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/levels/level2.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/levels/level3.js') }}"></script>
+</body>
+</html>
