@@ -170,3 +170,39 @@
   .scene-frame { width: 100%; }
   .hud-phase { display: none; }
 }
+
+/* ---------- Objetivos de aprendizaje (antes de cada nivel) ---------- */
+#modal-objectives { z-index: 45; --obj: #63d8e6; }
+.obj-card { --cyan: var(--obj); --ink: #e9edf7; --mute: #8e99c4; position: relative; max-width: 860px; padding: 0; text-align: left;
+  display: flex; flex-direction: column; background: #0a1433; border: 1px solid color-mix(in srgb, var(--obj) 55%, transparent); border-top: 3px solid var(--obj); border-radius: 18px; overflow: hidden; }
+.obj-body { overflow-y: auto; padding: 28px 30px 8px; }
+.obj-card .briefing-title { font-size: clamp(2.2rem, 5vw, 3.4rem); margin-bottom: 10px; }
+.obj-card .briefing-title span { -webkit-text-stroke-color: var(--obj); }
+.obj-mission { color: #c9d1ee; line-height: 1.55; margin: 0 0 18px; font-size: 1.02rem; }
+.obj-h { font: 700 .72rem 'Space Mono', monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--obj); margin: 18px 0 10px; }
+.obj-goals { margin: 0; padding: 0; list-style: none; counter-reset: g; display: grid; gap: 8px; }
+.obj-goals li { counter-increment: g; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; color: var(--ink); line-height: 1.5; }
+.obj-goals li::before { content: counter(g); width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%;
+  border: 1.5px solid var(--obj); color: var(--obj); font: 700 .8rem 'Space Mono', monospace; }
+.obj-areas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.obj-areas div { border: 1px solid rgba(142, 153, 196, .3); border-radius: 10px; padding: 10px 12px; background: rgba(255, 255, 255, .02); }
+.obj-areas b { display: block; font: 700 1rem 'Saira Condensed', sans-serif; letter-spacing: .04em; color: var(--ink); margin-bottom: 4px; }
+.obj-areas span { color: #b7c0e4; font-size: .88rem; line-height: 1.4; }
+.obj-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
+.obj-steps { margin: 0; padding-left: 20px; color: #c9d1ee; line-height: 1.5; display: grid; gap: 6px; font-size: .94rem; }
+.obj-steps li::marker { color: var(--obj); font-weight: 800; }
+.obj-world { color: #c9d1ee; line-height: 1.5; margin: 0; font-size: .94rem; }
+.obj-stars { margin: 14px 0 0; padding: 10px 12px; border-left: 3px solid var(--obj); background: rgba(255, 255, 255, .03); color: #b7c0e4; font-size: .86rem; line-height: 1.45; }
+.obj-stars b { color: var(--ink); }
+.obj-foot { display: flex; justify-content: flex-end; padding: 16px 30px 20px; border-top: 1px solid rgba(142, 153, 196, .2); }
+.obj-go { --accent: var(--obj); white-space: nowrap; }
+.obj-x { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; cursor: pointer;
+  background: rgba(255, 255, 255, .04); border: 1px solid rgba(142, 153, 196, .4); z-index: 1; }
+.obj-x:hover { border-color: var(--obj); }
+.obj-x svg { width: 16px; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; }
+@media (max-width: 760px) {
+  .obj-areas, .obj-two { grid-template-columns: minmax(0, 1fr); }
+  .obj-body { padding: 22px 18px 6px; }
+  .obj-foot { padding: 14px 18px; }
+}
+

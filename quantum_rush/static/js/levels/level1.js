@@ -329,6 +329,7 @@ async function startLevel1() {
   l1SetPhase('intro');
   show('screen-level1');
   Kit.ambient(true);
+  await showObjectives(1);
 
   await l1Say([
     { t: '¡Mis sistemas están descalibrados! Estoy enviando el 90% de la energía de rescate al País A y solo el 10% al País B.', hold: 4200 },

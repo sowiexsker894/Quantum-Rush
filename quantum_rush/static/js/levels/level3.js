@@ -373,6 +373,7 @@ async function startLevel3() {
   l3RenderGates(); l3CircuitChanged(); l3DrawLoss();
   show('screen-level3');
   Kit.ambient(true);
+  await showObjectives(3);
   try { L3.data = await api('/api/nivel3/data'); } catch (e) { toast('Error del servidor: ' + e.message); return; }
   requestAnimationFrame(() => l3Draw(null));
   await l3Say([

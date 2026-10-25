@@ -354,6 +354,7 @@ async function startLevel2() {
   l2RenderGates(); l2RenderSlots();
   show('screen-level2');
   Kit.ambient(true);
+  await showObjectives(2);
   try { L2.data = await api('/api/nivel2/data'); } catch (e) { toast('Error del servidor: ' + e.message); return; }
   l2RenderMap();
   await l2Say([
