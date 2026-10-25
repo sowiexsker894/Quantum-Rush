@@ -182,6 +182,14 @@ const Kit = (() => {
     sfx('click');
   }
 
+  function openHint(text) {
+    const hintText = document.getElementById('hint-text');
+    if (hintText) hintText.innerHTML = richText(text);
+    const m = document.getElementById('modal-hint');
+    if (m) m.classList.add('open');
+    sfx('click');
+  }
+
   // Delegación global para cierre de modales (botón [data-close], clic en fondo oscuro o tecla Escape)
   document.addEventListener('click', e => {
     const closeBtn = e.target.closest('[data-close]');
@@ -209,5 +217,5 @@ const Kit = (() => {
   const stars = n => [1, 2, 3].map(s => `<svg viewBox="0 0 24 24" class="${s <= n ? 'on' : ''}">${STAR}</svg>`).join('');
   const starsFor = hints => hints === 0 ? 3 : hints === 1 ? 2 : 1;
 
-  return { sfx, ambient, makeSay, highlight, timer, openGlossary, stars, starsFor };
+  return { sfx, ambient, makeSay, highlight, timer, openGlossary, openHint, stars, starsFor };
 })();

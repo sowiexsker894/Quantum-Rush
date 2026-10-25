@@ -357,14 +357,18 @@ async function l3Win(acc) {
 
 // ---------------------------------------------------------------- Inicio / salida
 const L3_HINTS = {
+  intro: 'Espera a que termine el briefing de NOVA. Luego arrastra Ry, Rx y CNOT al circuito.',
   p1: 'Arrastra Ry, Rx y CNOT a los tres espacios del circuito (en cualquier orden) y presiona EJECUTAR.',
   p2: 'Mueve las perillas y mira cómo cambia la frontera. Es muy difícil: pronto podrás usar el optimizador.',
   p3: 'Arrastra el botón OPTIMIZADOR DE GRADIENTE encima del circuito (o haz clic en él) y luego presiona EJECUTAR.',
 };
+
+l3('l3-dict').onclick = () => Kit.openGlossary('Diccionario · Nivel 4', L3_TERMS);
+
 l3('l3-hint').onclick = () => {
-  if (!L3_HINTS[L3.phase]) return;
-  L3.hints++; Kit.sfx('click');
-  l3Say([{ t: 'Pista:', hi: L3_HINTS[L3.phase], hold: 6500 }]);
+  const text = L3_HINTS[L3.phase] || L3_HINTS.p1;
+  L3.hints++;
+  Kit.openHint(text);
 };
 
 async function startLevel3() {

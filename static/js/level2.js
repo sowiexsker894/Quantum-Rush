@@ -343,13 +343,17 @@ async function l2Win() {
 
 // ---------------------------------------------------------------- Inicio / salida
 const L2_HINTS = {
+  intro: 'Espera a que termine el briefing de NOVA. Luego arrastra H, CSWAP y H al circuito.',
   p1: 'Arrastra una H al primer espacio, CSWAP al bloque grande del centro y otra H al último espacio. Luego presiona EJECUTAR.',
   p2: 'Mantén presionado sobre un punto gris y suelta sobre un punto de color cercano. Las lecturas cercanas a 100% son las mejores. Repite hasta tener 3 cables.',
 };
+
+l2('l2-dict').onclick = () => Kit.openGlossary('Diccionario · Nivel 3', L2_TERMS);
+
 l2('l2-hint').onclick = () => {
-  if (!L2_HINTS[L2.phase]) return;
-  L2.hints++; Kit.sfx('click');
-  l2Say([{ t: 'Pista:', hi: L2_HINTS[L2.phase], hold: 6500 }]);
+  const text = L2_HINTS[L2.phase] || L2_HINTS.p1;
+  L2.hints++;
+  Kit.openHint(text);
 };
 
 async function startLevel2() {

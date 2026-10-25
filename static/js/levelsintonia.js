@@ -287,17 +287,19 @@ async function lsWin(r) {
   ls('ls-win').classList.add('open');
 }
 
-// ---------------------------------------------------------------- Inicio / Salida
 const LS_HINTS = {
+  intro: 'Espera a que NOVA termine o haz clic en su diálogo. Luego arrastra H a Alfa (q0) y CNOT al enlace central.',
   p1: 'Coloca H en la ranura de Alfa (q0) y la compuerta CNOT en el enlace central. Luego presiona EJECUTAR.',
+  alarm: 'Lee la alerta de seguridad: debes invertir la correlación usando la compuerta X.',
   p2: 'Deja H y CNOT donde están, y arrastra una compuerta X a la ranura derecha de Beta (q1).',
 };
 
+ls('ls-dict').onclick = () => Kit.openGlossary('Diccionario · Nivel 2', LS_TERMS);
+
 ls('ls-hint').onclick = () => {
-  if (!LS_HINTS[LS.phase]) return;
+  const text = LS_HINTS[LS.phase] || LS_HINTS.p1;
   LS.hints++;
-  Kit.sfx('click');
-  lsSay([{ t: 'Pista:', hi: LS_HINTS[LS.phase], hold: 6500 }]);
+  Kit.openHint(text);
 };
 
 const closeLsCode = () => { ls('ls-code-modal').classList.remove('open'); Kit.sfx('click'); };

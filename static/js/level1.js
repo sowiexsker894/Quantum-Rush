@@ -316,10 +316,9 @@ const L1_HINTS = {
   p2: 'Haz clic en la H del circuito para quitarla, coloca Ry y deja el ángulo cerca de 53°. Luego ejecuta.',
 };
 l1('l1-hint').onclick = () => {
-  if (!['p1', 'p2'].includes(L1.phase)) return;
+  const text = L1_HINTS[L1.phase] || L1_HINTS.p1;
   L1.hints++;
-  Kit.sfx('click');
-  l1Say([{ t: 'Pista:', hi: L1_HINTS[L1.phase], hold: 6000 }]);
+  Kit.openHint(text);
 };
 
 async function startLevel1() {

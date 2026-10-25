@@ -189,8 +189,9 @@ $('#btn-hint').onclick = () => {
   const m = state.ch.missions[state.mission];
   if (!m) return;
   state.hints++;
-  dialog.reset();
-  dialog.say([{ mood: 'thinking', text: '💡 ' + m.hint }]);
+  if (window.Kit && typeof window.Kit.openHint === 'function') {
+    Kit.openHint('💡 ' + m.hint);
+  }
 };
 
 // Los laboratorios llaman a esto cada vez que el jugador hace algo
