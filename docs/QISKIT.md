@@ -14,21 +14,24 @@ En Quantum Rush, **todo cálculo cuántico lo hace Qiskit en el backend** (Pytho
 ## Arquitectura
 
 ```
-Navegador (HTML/CSS/JS)                Servidor Flask (app.py)            Qiskit
+Navegador (HTML/CSS/JS)                Servidor Flask (api.py)            Qiskit
 ───────────────────────                ───────────────────────            ──────
-Jugador arma el circuito  ──POST JSON──▶  /api/nivel1        ──▶ quantum_engine.balance()
-(arrastra compuertas)                   /api/nivel2/scan    ──▶ levels_engine.swap_test()
-                                        /api/nivel3/eval    ──▶ levels_engine.vqc_eval()
-                                        /api/nivel3/train   ──▶ levels_engine.vqc_train()
+Jugador arma el circuito  ──POST JSON──▶  /api/nivel1        ──▶ level1_balance.balance()
+(arrastra compuertas)                   /api/nivel2/scan    ──▶ level2_swap_test.swap_test()
+                                        /api/nivel3/eval    ──▶ level3_vqc.vqc_eval()
+                                        /api/nivel3/train   ──▶ level3_vqc.vqc_train()
 Anima resultados          ◀──JSON──────  probabilidades, conteos, diagrama, código
 ```
 
 | Archivo | Qué contiene |
 |---|---|
-| `app.py` | Rutas Flask (API) que reciben el circuito y llaman al motor |
-| `quantum_engine.py` | Nivel 1: construir y simular circuitos de 1 qubit (H, X, Y, Z, Ry, CNOT) |
-| `levels_engine.py` | Nivel 2 (SWAP test + KNN) y Nivel 3 (clasificador variacional cuántico) |
-| `static/js/level1.js`, `level2.js`, `level3.js` | Interfaz: arman la lista de compuertas y la envían con `api(...)` |
+| `quantum_rush/api.py` | Rutas Flask (API) que reciben el circuito y llaman al motor |
+| `quantum_rush/quantum/common.py` | Construir circuitos a partir de la lista de compuertas, limitar disparos, dibujar diagramas |
+| `quantum_rush/quantum/level1_balance.py` | Nivel 1: superposición y rotación Ry |
+| `quantum_rush/quantum/level2_swap_test.py` | Nivel 2: SWAP test + KNN |
+| `quantum_rush/quantum/level3_vqc.py` | Nivel 3: clasificador variacional cuántico |
+| `quantum_rush/static/js/levels/level1.js`, `level2.js`, `level3.js` | Interfaz: arman la lista de compuertas y la envían con `api(...)` |
+| `tests/test_quantum.py` | Pruebas que verifican la física de cada nivel |
 
 ### Endpoints
 
@@ -51,7 +54,7 @@ Anima resultados          ◀──JSON──────  probabilidades, conte
 - **Fase 2:** con **Ry(θ)** el jugador controla el reparto: P(A) = cos²(θ/2). Con θ ≈ 53° se obtiene el objetivo 80 / 20.
 
 ```python
-# quantum_engine.py
+# quantum_rush/quantum/level1_balance.py
 def balance(gates, shots=1000):
     qc = build_circuit(1, gates)          # QuantumCircuit(1) + qc.h(0) o qc.ry(theta, 0)
     state = Statevector(qc)
@@ -226,8 +229,9 @@ El servidor devuelve el historial completo: en cada paso, los ángulos, el error
 
 ```bash
 pip install -r requirements.txt
-python -c "import levels_engine as le; print(le.swap_test(['h','cswap','h'], le.L2_HEALTHY, le.L2_FIRST_GRAY)['diagram'])"
-python -c "import levels_engine as le; print(le.vqc_train(['ry','rx','cx'], [1.6,1.6,0.9,-0.9])['history'][-1]['accuracy'])"
+python -c "from quantum_rush.quantum import level2_swap_test as l2; print(l2.swap_test(['h','cswap','h'], l2.L2_HEALTHY, l2.L2_FIRST_GRAY)['diagram'])"
+python -c "from quantum_rush.quantum import vqc_train; print(vqc_train(['ry','rx','cx'], [1.6,1.6,0.9,-0.9])['history'][-1]['accuracy'])"
+python -m pytest   # todas las pruebas automáticas
 ```
 
 Dentro del juego, el botón **VER CÓDIGO QISKIT** de cada nivel muestra el diagrama y un código Qiskit equivalente que se puede copiar y ejecutar por separado.
