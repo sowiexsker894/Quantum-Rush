@@ -1,0 +1,93 @@
+<!-- ========== NIVEL 3: LA COSECHA ========== -->
+<section id="screen-level3" class="screen lvl lvl3">
+  <header class="lvl-hud">
+    <button class="hud-btn" id="l3-exit"><svg viewBox="0 0 24 24"><path d="M20 12 H5 M11 6 L5 12 L11 18"/></svg> MISIONES</button>
+    <div class="hud-title"><span>NIVEL 03</span> LA COSECHA</div>
+    <div class="hud-phase" id="l3-phase">BRIEFING</div>
+    <div class="hud-right">
+      <button class="hud-btn" id="l3-dict"><svg viewBox="0 0 24 24"><path d="M4 4 H10 A2 2 0 0 1 12 6 V20 A2 2 0 0 0 10 18 H4 Z M20 4 H14 A2 2 0 0 0 12 6 V20 A2 2 0 0 1 14 18 H20 Z"/></svg> DICCIONARIO</button>
+      <button class="hud-btn sound-btn" aria-label="Sonido"><svg viewBox="0 0 24 24"><path d="M4 9 H8 L13 5 V19 L8 15 H4 Z"/><path class="waves" d="M16.5 8.5 C18.5 10.5 18.5 13.5 16.5 15.5 M19 6 C22.3 9.3 22.3 14.7 19 18"/></svg></button>
+      <button class="hud-btn" id="l3-hint"><svg viewBox="0 0 24 24"><path d="M9 18 H15 M10 21 H14 M12 3 A6 6 0 0 1 16 13.5 C15 14.5 15 15.5 15 16 H9 C9 15.5 9 14.5 8 13.5 A6 6 0 0 1 12 3 Z"/></svg> PISTA</button>
+      <div class="hud-timer"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9 V13 L15 15 M9 2 H15"/></svg><span id="l3-timer">00:00</span></div>
+    </div>
+  </header>
+
+  <div class="lvl-layout">
+    <aside class="lvl-panel">
+      <section class="pcard">
+        <h3><svg viewBox="0 0 24 24" class="pc-ico"><path d="M3 4 V20 H21"/><path d="M6 7 C9 14 13 15 20 16"/></svg> ERROR DE ENTRENAMIENTO (LOSS)</h3>
+        <svg viewBox="0 0 300 110" class="loss-screen" id="l3-loss"></svg>
+        <div class="kpis3">
+          <div><small>PRECISIÓN</small><b id="l3-acc">—</b></div>
+          <div><small>ERROR</small><b id="l3-err">—</b></div>
+          <div><small>PASO</small><b id="l3-epoch">0</b></div>
+        </div>
+      </section>
+
+      <section class="pcard">
+        <h3><svg viewBox="0 0 24 24" class="pc-ico"><path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z M3 7 L12 12 L21 7 M12 12 V22"/></svg> INVENTARIO DE COMPUERTAS</h3>
+        <div class="gate-grid" id="l3-gates"></div>
+        <button class="optim-btn" id="l3-optim" disabled>
+          <svg viewBox="0 0 24 24"><path d="M4 18 C8 18 9 6 13 6 S18 14 20 14"/><circle cx="20" cy="14" r="2"/></svg>
+          OPTIMIZADOR DE GRADIENTE
+        </button>
+      </section>
+
+      <section class="pcard">
+        <h3><svg viewBox="0 0 24 24" class="pc-ico"><path d="M3 7 H21 M3 17 H21 M8 4 V10 M16 14 V20"/></svg> CIRCUITO CUÁNTICO
+          <button class="code-link" id="l3-code-btn">VER CÓDIGO QISKIT</button></h3>
+        <div class="qc2v">
+          <span class="wl r1">|x₁⟩</span><span class="wl r2">|x₂⟩</span>
+          <i class="w r1"></i><i class="w r2"></i>
+          <div class="data-block">DATOS</div>
+          <div class="slot s-tall" data-slot="0"><span class="plus">+</span></div>
+          <div class="slot s-tall" data-slot="1"><span class="plus">+</span></div>
+          <div class="slot s-tall" data-slot="2"><span class="plus">+</span></div>
+          <div class="meter-box mini"><svg viewBox="0 0 24 24"><path d="M4 16 A8 8 0 0 1 20 16"/><path d="M12 16 L16 9"/></svg></div>
+        </div>
+        <div class="knobs" id="l3-knobs"><p class="pc-note">Las perillas aparecen al colocar Ry o Rx.</p></div>
+        <button class="run-btn" id="l3-run"><svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z"/></svg> EJECUTAR</button>
+      </section>
+    </aside>
+
+    <main class="lvl-scene">
+      <div class="scene-frame" id="l3-frame" style="aspect-ratio: 1404 / 1144; width: min(100%, calc((100vh - 100px) * 1404 / 1144));">
+        <img src="{{ url_for('static', filename='img/scenes/nivel3.jpg') }}" alt="NOVA frente al mapa de datos de arándanos">
+        <div class="plot-wrap"><canvas id="l3-canvas"></canvas><span class="plot-tag" id="l3-plot-tag">DATOS SIN CLASIFICAR</span></div>
+        <div class="nova-bubble b3" id="l3-bubble">
+          <span class="nb-tag">NOVA</span>
+          <p id="l3-say" class="nb-say"></p>
+          <p class="nb-hi" id="l3-say-hi"></p>
+          <span class="nb-skip">clic para continuar</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal" id="l3-code-modal">
+    <div class="modal-card wide l1-modal">
+      <p class="kicker"><span class="kicker-line"></span> RED NEURONAL CUÁNTICA · QISKIT</p>
+      <pre id="l3-diagram">Todavía no has ejecutado el modelo.</pre>
+      <pre id="l3-code"></pre>
+      <button class="lv-btn" data-close style="--accent:#a98bff">CERRAR</button>
+    </div>
+  </div>
+
+  <div class="modal" id="l3-win">
+    <div class="modal-card l1-modal">
+      <p class="kicker"><span class="kicker-line"></span> NIVEL 03 COMPLETADO</p>
+      <h2 class="briefing-title">COSECHA <span>SALVADA</span></h2>
+      <div class="l1-stars" id="l3-stars"></div>
+      <div class="l1-stats" id="l3-stats"></div>
+      <ul class="l1-learned">
+        <li>Una <b>red neuronal cuántica (VQC)</b> es un circuito con perillas: <b>Ry</b> y <b>Rx</b>, unidas por <b>CNOT</b>.</li>
+        <li>Ajustar a mano es casi imposible: el <b>optimizador de gradiente</b> gira las perillas para bajar el <b>error</b>.</li>
+        <li>Entrenar = repetir pasos hasta la <b>convergencia</b>: la frontera de decisión se dobla para separar los datos.</li>
+      </ul>
+      <div class="l1-actions">
+        <button class="btn-text" id="l3-retry">Repetir nivel</button>
+        <button class="lv-btn" id="l3-next" style="--accent:#a98bff">VOLVER A MISIONES <svg viewBox="0 0 24 24"><path d="M4 12 H19 M13 6 L19 12 L13 18"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,60 @@
+<!-- ========== PANTALLA DE TÍTULO ========== -->
+<section id="screen-title" class="screen landing active">
+  <header class="landing-nav">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" class="brand-icon"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z"/></svg>
+      QUANTUM <span>RUSH</span>
+    </div>
+    <div class="nav-status">
+      <span class="status-dot"></span> SISTEMA NEXUS EN RIESGO
+      <span class="nav-year">AÑO 2189</span>
+    </div>
+  </header>
+
+  <div class="landing-body">
+    <div class="landing-copy">
+      <p class="kicker"><span class="kicker-line"></span> UNA AVENTURA INTERPLANETARIA · VERSIÓN 0.1</p>
+      <h1 class="hero-title">
+        <span class="hero-solid">QUANTUM</span>
+        <span class="hero-outline">RUSH</span>
+      </h1>
+      <p class="hero-sub">Entrena tu IA para salvar el universo</p>
+      <p class="hero-text">Los planetas del sistema Nexus están en emergencia. NOVA, un pequeño robot espacial
+        inteligente pero algo nervioso, necesita un compañero de misión que le ayude a tomar decisiones.
+        Ese compañero eres tú.</p>
+      <button class="btn-launch" id="btn-start">
+        <svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z"/></svg>
+        DESPEGAR
+        <svg viewBox="0 0 24 24" class="arrow"><path d="M4 12 H19 M13 6 L19 12 L13 18"/></svg>
+      </button>
+      <ul class="hero-pillars">
+        <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5 L13.5 13.5 L8.5 15.5 L10.5 10.5 Z"/></svg> EXPLORA</li>
+        <li><svg viewBox="0 0 24 24"><path d="M3 9 L12 4 L21 9 L12 14 Z"/><path d="M7 11.5 V16 C9 18 15 18 17 16 V11.5"/></svg> APRENDE</li>
+        <li><svg viewBox="0 0 24 24"><path d="M12 2 L14 9 L21 9 L15.5 13.5 L17.5 21 L12 16.5 L6.5 21 L8.5 13.5 L3 9 L10 9 Z"/></svg> RESTAURA</li>
+      </ul>
+    </div>
+
+    <div class="scene" id="scene" aria-hidden="true">
+      <div class="nebula"></div>
+      <div class="planet-glow"></div>
+      <div class="ring ring-back"></div>
+      <div class="moon" data-orbit="0.50,0.13,0,24"></div>
+      <div class="planet-body">
+        <div class="planet-surface"></div>
+        <div class="planet-clouds"></div>
+        <div class="planet-shade"></div>
+      </div>
+      <div class="ring ring-front"></div>
+      <div class="moon small" data-orbit="0.40,0.104,2.4,15"></div>
+      <div class="robot-wrap">
+        <div class="robot">
+          <img src="{{ url_for('static', filename='img/characters/nova-robot.png') }}" alt="NOVA, el robot espacial">
+          <span class="beam beam-blue"></span>
+          <span class="beam beam-gold"></span>
+        </div>
+      </div>
+      <div class="shooting-star s1"></div>
+      <div class="shooting-star s2"></div>
+    </div>
+  </div>
+</section>

@@ -6,7 +6,7 @@ const LEVELS = [
     desc: 'El País A y el País B necesitan energía. Repártela con justicia usando la superposición y luego inclínala hacia quien más la necesita.',
     tags: [['q', 'Superposición'], ['q', 'Rotación'], ['s', 'Probabilidad']],
     gates: 'H · Ry', difficulty: 1,
-    chapter: null, start: () => startLevel1(),
+    start: () => startLevel1(),
   },
   {
     id: 'despliegue', num: '02', name: 'El Despliegue', accent: '#ffd36e',
@@ -14,7 +14,7 @@ const LEVELS = [
     desc: 'Hay escuadrones sin diagnóstico. Mide qué tan parecidos son a operarios sanos o exhaustos y clasifícalos por mayoría de vecinos.',
     tags: [['q', 'SWAP Test'], ['s', 'Similitud'], ['m', 'K vecinos']],
     gates: 'H · CSWAP', difficulty: 2,
-    chapter: null, start: () => startLevel2(),
+    start: () => startLevel2(),
   },
   {
     id: 'cosecha', num: '03', name: 'La Cosecha', accent: '#a98bff',
@@ -22,7 +22,7 @@ const LEVELS = [
     desc: 'Los arándanos sanos y dañados están mezclados en espirales. Construye una red neuronal cuántica y entrénala para separarlos.',
     tags: [['q', 'Entrelazamiento'], ['m', 'Red neuronal'], ['m', 'Entrenamiento']],
     gates: 'Rx · Ry · CNOT', difficulty: 3,
-    chapter: null, start: () => startLevel3(),
+    start: () => startLevel3(),
   },
 ];
 
@@ -94,7 +94,7 @@ const VISUALS = { balance: visualBalance, despliegue: visualDespliegue, cosecha:
 
 // ---------- Render ----------
 function levelStars(lv) {
-  return progress[lv.id] || (lv.chapter != null ? progress[CHAPTERS[lv.chapter].id] || 0 : 0);
+  return progress[lv.id] || 0;
 }
 
 function renderLevels() {
@@ -136,13 +136,14 @@ function renderLevels() {
       </article>`;
   }).join('');
 
-  $$('.lv-btn:not([disabled])').forEach(b => b.onclick = () => {
-    const lv = LEVELS[+b.dataset.i];
-    if (lv.start) return lv.start();
-    if (lv.chapter == null) return toast(`El nivel ${lv.num} se está construyendo`);
-    startChapter(lv.chapter);
-  });
+  $$('.lv-btn:not([disabled])').forEach(b => b.onclick = () => LEVELS[+b.dataset.i].start());
 }
 
 document.getElementById('btn-home').onclick = () => show('screen-title');
 document.getElementById('btn-see-briefing').onclick = () => show('screen-briefing');
+
+// Las demás pantallas vuelven aquí con renderMap() para refrescar estrellas y candados
+function renderMap() {
+  renderLevels();
+}
+renderMap();
