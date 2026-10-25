@@ -88,12 +88,19 @@ $$('[data-close]').forEach(b => b.onclick = () => b.closest('.modal').classList.
 function show(id) {
   $$('.screen').forEach(s => s.classList.toggle('active', s.id === id));
 }
-$('#btn-start').onclick = () => playIntro();
+$('#btn-start').onclick = () => (typeof playIntro === 'function' ? playIntro() : (renderMap(), show('screen-map')));
+const btnMissions = $('#btn-to-missions');
+if (btnMissions) btnMissions.onclick = () => { renderMap(); show('screen-map'); };
+const brandBtn = $('.brand');
+if (brandBtn) {
+  brandBtn.style.cursor = 'pointer';
+  brandBtn.onclick = () => { renderMap(); show('screen-map'); };
+}
 $('#btn-back').onclick = () => { renderMap(); show('screen-map'); };
 $('#btn-win-continue').onclick = () => { $('#modal-win').classList.remove('open'); renderMap(); show('screen-map'); };
 
 function renderMap() {
-  renderLevels(); // la pantalla de niveles vive en levels.js
+  if (typeof renderLevels === 'function') renderLevels(); // la pantalla de niveles vive en levels.js
 }
 
 // ---------------------------------------------------------------- Diálogo de NOVA

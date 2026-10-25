@@ -7,8 +7,8 @@ const L2_GATES = {
 };
 const L2_TERMS = ['estado cuántico', 'fidelidad', 'SWAP test', 'CSWAP', 'Hadamard', 'ortogonal', 'KNN', 'vecino', 'mayoría', 'clasificar', 'probabilidad'];
 const L2_RADAR = ['h', 'cswap', 'h'];
-const L2_EYE = [800, 405]; // visor de NOVA en la escena (origen del haz de escaneo)
-const MAP = { x0: 70, w: 880, y0: 485, h: 360 };
+const L2_EYE = [240, 220]; // visor/proyector de NOVA en la escena (origen del haz de escaneo)
+const MAP = { x0: 220, w: 760, y0: 320, h: 360 };
 const mapXY = p => [MAP.x0 + p.x * MAP.w, MAP.y0 + p.y * MAP.h];
 
 const L2 = {};
@@ -17,8 +17,10 @@ const l2Say = Kit.makeSay('l2');
 const l2Hl = (...s) => Kit.highlight('screen-level2', ...s);
 const pct2 = v => Math.round(v * 100) + '%';
 
-l2('l2-dict').onclick = () => Kit.openGlossary('Diccionario · Nivel 2', L2_TERMS);
+const closeL2Code = () => { l2('l2-code-modal').classList.remove('open'); Kit.sfx('click'); };
 l2('l2-code-btn').onclick = () => l2('l2-code-modal').classList.add('open');
+const l2CodeClose = l2('l2-code-close'); if (l2CodeClose) l2CodeClose.onclick = closeL2Code;
+const l2CodeX = l2('l2-code-x'); if (l2CodeX) l2CodeX.onclick = closeL2Code;
 
 function l2SetPhase(phase) {
   L2.phase = phase;
@@ -311,8 +313,16 @@ async function l2Vote(gray, links) {
 
 async function l2Win() {
   l2SetPhase('done');
-  L2.timer.stop();
+  let elapsed = 0;
+  if (L2.timer) elapsed = L2.timer.stop();
   l2Hl();
+
+  if (window.CHALLENGE_MODE && typeof window.onChallengeLevelWin === 'function') {
+    Kit.sfx('success');
+    window.onChallengeLevelWin(elapsed);
+    return;
+  }
+
   Kit.sfx('success');
   await l2Say([
     { t: 'Clasificación exitosa. Usar similitud cuántica nos permite comparar perfiles sin medir distancias clásicas.', hold: 3800 },
@@ -347,7 +357,7 @@ async function startLevel2() {
     saidFirstLink: false, firstDone: false, grays: null, links: [], drag: null, selected: null });
   if (L2.timer) L2.timer.stop();
   l2('l2-win').classList.remove('open');
-  l2('l2-timer').textContent = '00:00';
+  l2('l2-timer').textContent = window.CHALLENGE_MODE ? '01:30' : '00:00';
   l2('l2-run').disabled = false;
   l2SetSim(null, 'El monitor mostrará la lectura del radar.');
   l2SetPhase('intro');
@@ -362,7 +372,7 @@ async function startLevel2() {
     { t: 'No calcularemos su cansancio: mediremos su [[fidelidad]], qué tan parecido es su [[estado cuántico]] al de un operario sano.', hold: 4400 },
     { t: 'Ensambla el Radar de Interferencia: el [[SWAP test]].', hi: 'Coloca H → CSWAP → H siguiendo los tres cables.', hold: 100 },
   ]);
-  if (L2.phase !== 'intro') return;
+  if (L2.phase !== 'intro' && !window.CHALLENGE_MODE) return;
   l2SetPhase('p1');
   l2Hl('#l2-gates [data-gate="h"]', '#screen-level2 .cswap-tile', '#screen-level2 .slot');
   L2.timer = Kit.timer(l2('l2-timer'));
@@ -376,7 +386,12 @@ function exitLevel2() {
   renderMap(); show('screen-map');
 }
 l2('l2-exit').onclick = exitLevel2;
-l2('l2-next').onclick = exitLevel2;
+const l2MapBtn = l2('l2-map-btn');
+if (l2MapBtn) l2MapBtn.onclick = exitLevel2;
+l2('l2-next').onclick = () => {
+  exitLevel2();
+  if (typeof startLevel3 === 'function') startLevel3();
+};
 l2('l2-retry').onclick = () => startLevel2();
 
-if (new URLSearchParams(location.search).get('pantalla') === 'nivel2') startLevel2();
+if (new URLSearchParams(location.search).get('pantalla') === 'nivel2' || new URLSearchParams(location.search).get('pantalla') === 'nivel3_despliegue') startLevel2();

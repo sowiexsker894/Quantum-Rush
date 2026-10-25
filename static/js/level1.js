@@ -9,8 +9,8 @@ const L1_GATES = {
   cx: { label: 'CNOT',  name: '(Nivel 2)',  color: '#7d86a8', locked: true },
 };
 const L1_TARGET = { A: 0.8, B: 0.2 };
-const L1_FROM = { A: [622, 404], B: [746, 434] };   // luces de NOVA (coordenadas de la escena)
-const L1_TO = { A: [330, 650], B: [835, 650] };     // islas de cada país
+const L1_FROM = { A: [590, 360], B: [630, 360] };   // luces de NOVA en cabina (1200x896)
+const L1_TO = { A: [360, 640], B: [840, 640] };     // zonas terrestres País A y País B
 
 const L1 = {};
 const l1 = id => document.getElementById(id);
@@ -278,9 +278,18 @@ async function l1Phase1Done(measuredA) {
 
 async function l1Win(measuredA) {
   l1SetPhase('done');
+  let elapsed = 0;
+  if (L1.timer) elapsed = L1.timer.stop();
   clearInterval(L1.timerId);
   l1('l1-quake').classList.remove('on');
   l1Highlight();
+
+  if (window.CHALLENGE_MODE && typeof window.onChallengeLevelWin === 'function') {
+    Kit.sfx('success');
+    window.onChallengeLevelWin(elapsed);
+    return;
+  }
+
   await l1Say([
     { t: `Distribución óptima: ${Math.round(measuredA * 100)}% / ${Math.round((1 - measuredA) * 100)}%. El País A ya recibe la ayuda que necesita.`, hold: 3200 },
     { t: 'Has aprendido la primera regla de mi núcleo: no controlamos el destino de una sola partícula, controlamos la probabilidad de todo el sistema.', hold: 4200 },
@@ -315,13 +324,13 @@ l1('l1-hint').onclick = () => {
 
 async function startLevel1() {
   Object.assign(L1, { slots: [null, null], theta: 0, hints: 0, shots: 0, busy: false, saidRun: false, saidRy: false });
+  if (L1.timer) L1.timer.stop();
   clearInterval(L1.timerId);
   l1('l1-theta').value = 0; l1('l1-theta-val').textContent = '0°';
   l1('l1-win').classList.remove('open');
   l1('l1-quake').classList.remove('on');
   l1('l1-alert').classList.remove('on');
-  l1('l1-packets').innerHTML = '';
-  l1('l1-timer').textContent = '00:00';
+  l1('l1-timer').textContent = window.CHALLENGE_MODE ? '01:30' : '00:00';
   l1('l1-run').disabled = false;
   l1RenderGates();
   l1CircuitChanged();
@@ -335,19 +344,16 @@ async function startLevel1() {
     { t: 'Los dos países necesitan la misma atención. Mira mi [[circuito]] cuántico: está vacío.', hold: 3200 },
     { t: 'Necesitamos equidad absoluta: 50% para cada país.', hi: 'Arrastra la compuerta H ([[Hadamard]]) a un espacio del circuito.', hold: 100 },
   ]);
-  if (L1.phase !== 'intro') return;
+  if (L1.phase !== 'intro' && !window.CHALLENGE_MODE) return;
   l1SetPhase('p1');
   l1Highlight('#l1-gates [data-gate="h"]', '#screen-level1 .slot');
-  const t0 = Date.now();
-  L1.timerId = setInterval(() => {
-    const s = Math.floor((Date.now() - t0) / 1000);
-    l1('l1-timer').textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
-  }, 500);
+  L1.timer = Kit.timer(l1('l1-timer'));
 }
 
 function exitLevel1() {
   l1Say.cancel();
   Kit.ambient(false);
+  if (L1.timer) L1.timer.stop();
   clearInterval(L1.timerId);
   L1.phase = 'done';
   l1('l1-win').classList.remove('open');
@@ -355,9 +361,17 @@ function exitLevel1() {
   show('screen-map');
 }
 l1('l1-exit').onclick = exitLevel1;
-l1('l1-next').onclick = exitLevel1;
-l1('l1-retry').onclick = () => startLevel1();
+const l1MapBtn = l1('l1-map');
+if (l1MapBtn) l1MapBtn.onclick = exitLevel1;
+l1('l1-next').onclick = () => {
+  exitLevel1();
+  if (typeof startLevelSintonia === 'function') startLevelSintonia();
+};
+const l1Retry = l1('l1-retry'); if (l1Retry) l1Retry.onclick = () => startLevel1();
+const closeL1Code = () => { l1('l1-code-modal').classList.remove('open'); Kit.sfx('click'); };
 l1('l1-code-btn').onclick = () => l1('l1-code-modal').classList.add('open');
+const l1CodeClose = l1('l1-code-close'); if (l1CodeClose) l1CodeClose.onclick = closeL1Code;
+const l1CodeX = l1('l1-code-x'); if (l1CodeX) l1CodeX.onclick = closeL1Code;
 
 // Atajo para presentaciones: ?pantalla=nivel1
 if (new URLSearchParams(location.search).get('pantalla') === 'nivel1') startLevel1();

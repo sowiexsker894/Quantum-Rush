@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/levels.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/level1.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/levelsintonia.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/level23.css') }}">
 </head>
 <body>
@@ -39,11 +40,17 @@
         <p class="hero-text">Los planetas del sistema Nexus están en emergencia. NOVA, un pequeño robot espacial
           inteligente pero algo nervioso, necesita un compañero de misión que le ayude a tomar decisiones.
           Ese compañero eres tú.</p>
-        <button class="btn-launch" id="btn-start">
-          <svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z"/></svg>
-          DESPEGAR
-          <svg viewBox="0 0 24 24" class="arrow"><path d="M4 12 H19 M13 6 L19 12 L13 18"/></svg>
-        </button>
+        <div class="hero-actions">
+          <button class="btn-launch" id="btn-start">
+            <svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z"/></svg>
+            DESPEGAR
+            <svg viewBox="0 0 24 24" class="arrow"><path d="M4 12 H19 M13 6 L19 12 L13 18"/></svg>
+          </button>
+          <button class="btn-launch btn-launch-alt" id="btn-to-missions">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            ELEGIR MISIÓN
+          </button>
+        </div>
         <ul class="hero-pillars">
           <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5 L13.5 13.5 L8.5 15.5 L10.5 10.5 Z"/></svg> EXPLORA</li>
           <li><svg viewBox="0 0 24 24"><path d="M3 9 L12 4 L21 9 L12 14 Z"/><path d="M7 11.5 V16 C9 18 15 18 17 16 V11.5"/></svg> APRENDE</li>
@@ -152,10 +159,14 @@
         QUANTUM <span>RUSH</span>
       </button>
       <div class="nav-status">
-        <span class="status-dot"></span> <span id="lv-done">0</span>/3 NIVELES
+        <button class="btn-text" id="btn-leaderboard" style="display:inline-flex; align-items:center; gap:6px; margin-right:12px; padding:4px 10px; border:1px solid rgba(255,211,110,0.4); border-radius:6px; color:#ffd36e; font-size:0.75rem;">
+          <svg viewBox="0 0 24 24" style="width:14px; height:14px; fill:#ffd36e;"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+          LEADERBOARD
+        </button>
+        <span class="status-dot"></span> <span id="lv-done">0</span>/<span id="lv-total">4</span> NIVELES
         <span class="nav-stars">
           <svg viewBox="0 0 24 24"><path d="M12 2 L14.6 8.6 L21.5 9.2 L16.2 13.8 L17.8 20.6 L12 17 L6.2 20.6 L7.8 13.8 L2.5 9.2 L9.4 8.6 Z"/></svg>
-          <span id="stars-count">0</span>/9
+          <span id="stars-count">0</span>/<span id="stars-total">12</span>
         </span>
       </div>
     </header>
@@ -302,9 +313,9 @@
 
       <!-- Escena (derecha) -->
       <main class="lvl-scene">
-        <div class="scene-frame" id="l1-frame">
-          <img src="{{ url_for('static', filename='img/nivel1-escena.jpg') }}" alt="NOVA proyectando energía hacia el País A y el País B">
-          <svg viewBox="0 0 1100 943" class="scene-fx" id="l1-fx">
+        <div class="scene-frame" id="l1-frame" style="aspect-ratio: 1200 / 896; width: min(100%, calc((100vh - 100px) * 1200 / 896));">
+          <img src="{{ url_for('static', filename='img/cockpit-earth.jpg') }}" alt="Puente de mando - Observación orbital">
+          <svg viewBox="0 0 1200 896" class="scene-fx" id="l1-fx">
             <defs>
               <linearGradient id="beamA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ee6ff"/><stop offset="1" stop-color="#2f8bff" stop-opacity="0"/></linearGradient>
               <linearGradient id="beamB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b0"/><stop offset="1" stop-color="#ffb02e" stop-opacity="0"/></linearGradient>
@@ -312,23 +323,28 @@
               <radialGradient id="glowB"><stop offset="0" stop-color="#ffc24a" stop-opacity=".7"/><stop offset="1" stop-color="#ffc24a" stop-opacity="0"/></radialGradient>
               <radialGradient id="dark"><stop offset="0" stop-color="#02040f" stop-opacity=".85"/><stop offset="1" stop-color="#02040f" stop-opacity="0"/></radialGradient>
             </defs>
-            <ellipse cx="300" cy="690" rx="230" ry="95" fill="url(#glowA)" id="l1-glow-a"/>
-            <ellipse cx="835" cy="690" rx="220" ry="95" fill="url(#glowB)" id="l1-glow-b"/>
-            <ellipse cx="300" cy="690" rx="200" ry="80" fill="url(#dark)" id="l1-dark-a"/>
-            <ellipse cx="835" cy="690" rx="190" ry="80" fill="url(#dark)" id="l1-dark-b"/>
-            <polygon points="612,398 632,410 520,600 270,600" fill="url(#beamA)" class="beam-fx" id="l1-beam-a"/>
-            <polygon points="735,430 758,438 930,620 735,620" fill="url(#beamB)" class="beam-fx" id="l1-beam-b"/>
+            <ellipse cx="360" cy="650" rx="170" ry="75" fill="url(#glowA)" id="l1-glow-a"/>
+            <ellipse cx="840" cy="650" rx="170" ry="75" fill="url(#glowB)" id="l1-glow-b"/>
+            <ellipse cx="360" cy="650" rx="150" ry="65" fill="url(#dark)" id="l1-dark-a"/>
+            <ellipse cx="840" cy="650" rx="150" ry="65" fill="url(#dark)" id="l1-dark-b"/>
+            <polygon points="580,360 600,360 480,640 240,640" fill="url(#beamA)" class="beam-fx" id="l1-beam-a"/>
+            <polygon points="600,360 620,360 960,640 720,640" fill="url(#beamB)" class="beam-fx" id="l1-beam-b"/>
             <g id="l1-quake" class="quake">
-              <circle cx="300" cy="680" r="40"/><circle cx="300" cy="680" r="40" class="d2"/><circle cx="300" cy="680" r="40" class="d3"/>
+              <circle cx="360" cy="650" r="40"/><circle cx="360" cy="650" r="40" class="d2"/><circle cx="360" cy="650" r="40" class="d3"/>
             </g>
             <g id="l1-packets"></g>
           </svg>
 
-          <div class="nova-bubble" id="l1-bubble">
-            <span class="nb-tag">NOVA</span>
-            <p id="l1-say"></p>
-            <p class="nb-hi" id="l1-say-hi"></p>
-            <span class="nb-skip">clic para continuar</span>
+          <div class="nova-companion l1" id="l1-companion">
+            <div class="nova-avatar-wrap">
+              <img src="{{ url_for('static', filename='img/nova-robot.png') }}" alt="NOVA" class="nova-avatar-img">
+            </div>
+            <div class="nova-bubble b1" id="l1-bubble">
+              <span class="nb-tag">NOVA</span>
+              <p id="l1-say" class="nb-say"></p>
+              <p class="nb-hi" id="l1-say-hi"></p>
+              <span class="nb-skip">clic para continuar</span>
+            </div>
           </div>
 
           <div class="country-label a"><i class="pdot a"></i><span id="l1-lbl-a">P(A) = 0.90</span></div>
@@ -342,10 +358,13 @@
     <!-- Código Qiskit -->
     <div class="modal" id="l1-code-modal">
       <div class="modal-card wide l1-modal">
+        <button class="modal-close-icon" id="l1-code-x" data-close aria-label="Cerrar">&times;</button>
         <p class="kicker"><span class="kicker-line"></span> LO QUE EJECUTÓ EL SERVIDOR CON QISKIT</p>
         <pre id="l1-diagram">Todavía no has ejecutado el circuito.</pre>
         <pre id="l1-code"></pre>
-        <button class="lv-btn" data-close style="--accent:#63d8e6">CERRAR</button>
+        <div class="modal-card-foot">
+          <button class="lv-btn" id="l1-code-close" data-close style="--accent:#63d8e6">CERRAR</button>
+        </div>
       </div>
     </div>
 
@@ -363,18 +382,191 @@
         </ul>
         <div class="l1-actions">
           <button class="btn-text" id="l1-retry">Repetir nivel</button>
-          <button class="lv-btn" id="l1-next" style="--accent:#63d8e6">VOLVER A MISIONES
+          <button class="btn-text" id="l1-map">Misiones</button>
+          <button class="lv-btn" id="l1-next" style="--accent:#63d8e6">SIGUIENTE NIVEL
             <svg viewBox="0 0 24 24"><path d="M4 12 H19 M13 6 L19 12 L13 18"/></svg></button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== NIVEL 2: EL DESPLIEGUE ========== -->
+  <!-- ========== NIVEL 2: LA SINTONÍA ========== -->
+  <section id="screen-sintonia" class="screen lvl lvlsintonia">
+    <header class="lvl-hud">
+      <button class="hud-btn" id="ls-exit">
+        <svg viewBox="0 0 24 24"><path d="M20 12 H5 M11 6 L5 12 L11 18"/></svg> MISIONES
+      </button>
+      <div class="hud-title"><span>NIVEL 02</span> LA SINTONÍA</div>
+      <div class="hud-phase" id="ls-phase">BRIEFING</div>
+      <div class="hud-right">
+        <button class="hud-btn" id="ls-dict"><svg viewBox="0 0 24 24"><path d="M4 4 H10 A2 2 0 0 1 12 6 V20 A2 2 0 0 0 10 18 H4 Z M20 4 H14 A2 2 0 0 0 12 6 V20 A2 2 0 0 1 14 18 H20 Z"/></svg> DICCIONARIO</button>
+        <button class="hud-btn sound-btn" aria-label="Sonido"><svg viewBox="0 0 24 24"><path d="M4 9 H8 L13 5 V19 L8 15 H4 Z"/><path class="waves" d="M16.5 8.5 C18.5 10.5 18.5 13.5 16.5 15.5 M19 6 C22.3 9.3 22.3 14.7 19 18"/></svg></button>
+        <button class="hud-btn" id="ls-hint">
+          <svg viewBox="0 0 24 24"><path d="M9 18 H15 M10 21 H14 M12 3 A6 6 0 0 1 16 13.5 C15 14.5 15 15.5 15 16 H9 C9 15.5 9 14.5 8 13.5 A6 6 0 0 1 12 3 Z"/></svg> PISTA
+        </button>
+        <div class="hud-timer"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9 V13 L15 15 M9 2 H15"/></svg><span id="ls-timer">00:00</span></div>
+      </div>
+    </header>
+
+    <div class="lvl-layout">
+      <!-- Panel de controles (izquierda) -->
+      <aside class="lvl-panel">
+        <section class="pcard">
+          <h3><svg viewBox="0 0 24 24" class="pc-ico"><circle cx="12" cy="12" r="9"/><path d="M12 3 A9 9 0 0 1 12 21 Z"/></svg> SINTONÍA Y CORRELACIÓN</h3>
+          <div class="sintonia-gauge">
+            <div class="sintonia-row">
+              <span class="pname">Acuerdo</span>
+              <div class="sintonia-bar"><div class="sintonia-fill" id="ls-agree-bar"></div></div>
+              <b id="ls-agree-val">50%</b>
+            </div>
+            <div class="sintonia-kpis">
+              <div class="sintonia-kpi">
+                <small>CORRELACIÓN (r)</small>
+                <b id="ls-cor-val">0.00</b>
+              </div>
+              <div class="sintonia-kpi">
+                <small>ESTADO</small>
+                <b id="ls-verdict-tag" style="color:var(--acc)">DESACOPLADO</b>
+              </div>
+            </div>
+            <p class="pc-note" id="ls-gauge-note">Balizas en espera. Ejecuta un circuito para medir su sintonía.</p>
+          </div>
+        </section>
+
+        <section class="pcard">
+          <h3><svg viewBox="0 0 24 24" class="pc-ico"><path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z M3 7 L12 12 L21 7 M12 12 V22"/></svg> COMPUERTAS CUÁNTICAS</h3>
+          <div class="gate-grid" id="ls-gates"></div>
+          <p class="pc-note">Arrastra compuertas al circuito de 2 qubits o haz clic en ellas.</p>
+        </section>
+
+        <section class="pcard">
+          <h3><svg viewBox="0 0 24 24" class="pc-ico"><path d="M3 7 H21 M3 17 H21 M8 4 V10 M16 14 V20"/></svg> CIRCUITO CUÁNTICO (2 QUBITS)
+            <button class="code-link" id="ls-code-btn">VER CÓDIGO QISKIT</button></h3>
+          
+          <div class="qc2-sintonia">
+            <span class="wl r0">q₀</span>
+            <span class="w r0"></span>
+            <div class="slot r0" data-slot="0"><span class="plus">+</span></div>
+            <div class="slot s-cnot" data-slot="1"><span class="plus">+</span></div>
+            <div class="meter-box mini r0">
+              <svg viewBox="0 0 24 24"><path d="M4 16 A8 8 0 0 1 20 16"/><path d="M12 16 L16 9"/></svg>
+            </div>
+
+            <span class="wl r1">q₁</span>
+            <span class="w r1"></span>
+            <div class="slot r1" data-slot="2"><span class="plus">+</span></div>
+            <div class="meter-box mini r1">
+              <svg viewBox="0 0 24 24"><path d="M4 16 A8 8 0 0 1 20 16"/><path d="M12 16 L16 9"/></svg>
+            </div>
+          </div>
+
+          <button class="run-btn" id="ls-run" style="--acc:#3ee08f">
+            <svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z"/></svg> EJECUTAR CIRCUITO
+          </button>
+        </section>
+      </aside>
+
+      <!-- Escena (derecha) -->
+      <main class="lvl-scene">
+        <div class="scene-frame" id="ls-frame" style="aspect-ratio: 1200 / 896; width: min(100%, calc((100vh - 100px) * 1200 / 896));">
+          <img src="{{ url_for('static', filename='img/cockpit-deepspace.jpg') }}" alt="Puente de mando - La Sintonía">
+          <svg viewBox="0 0 1200 896" class="scene-fx sintonia-svg" id="ls-svg">
+            <defs>
+              <radialGradient id="alfaGlow">
+                <stop offset="0" stop-color="#63d8e6" stop-opacity=".7"/>
+                <stop offset="1" stop-color="#63d8e6" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="betaGlow">
+                <stop offset="0" stop-color="#3ee08f" stop-opacity=".7"/>
+                <stop offset="1" stop-color="#3ee08f" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            
+            <ellipse cx="600" cy="460" rx="420" ry="160" fill="none" stroke="rgba(142,153,196,0.18)" stroke-width="1.5" stroke-dasharray="6 8"/>
+            <line x1="340" y1="460" x2="860" y2="460" class="beacon-beam" id="ls-entangle-beam"/>
+            
+            <!-- Baliza Alfa (q0) -->
+            <g transform="translate(340 460)">
+              <circle r="70" fill="url(#alfaGlow)"/>
+              <circle r="42" fill="#061826" stroke="#63d8e6" stroke-width="2.5"/>
+              <circle r="12" fill="#63d8e6" id="ls-pulse-a" opacity="0"/>
+              <text y="6" class="beacon-tag">q₀</text>
+              <text y="70" class="beacon-sub">BALIZA ALFA (SECTOR BINARA)</text>
+            </g>
+
+            <!-- Baliza Beta (q1) -->
+            <g transform="translate(860 460)">
+              <circle r="70" fill="url(#betaGlow)"/>
+              <circle r="42" fill="#06221c" stroke="#3ee08f" stroke-width="2.5"/>
+              <circle r="12" fill="#3ee08f" id="ls-pulse-b" opacity="0"/>
+              <text y="6" class="beacon-tag">q₁</text>
+              <text y="70" class="beacon-sub">BALIZA BETA (ESTACIÓN CENTRAL)</text>
+            </g>
+
+            <!-- Enlace cuántico CNOT animado -->
+            <g transform="translate(600 460)">
+              <circle r="22" fill="#08142a" stroke="#ffd36e" stroke-width="2"/>
+              <path d="M-10 0 H10 M0 -10 V10" stroke="#ffd36e" stroke-width="2.5"/>
+            </g>
+          </svg>
+
+          <div class="nova-companion ls" id="ls-companion">
+            <div class="nova-avatar-wrap">
+              <img src="{{ url_for('static', filename='img/nova-robot.png') }}" alt="NOVA" class="nova-avatar-img">
+            </div>
+            <div class="nova-bubble sintonia" id="ls-bubble">
+              <span class="nb-tag">NOVA</span>
+              <p id="ls-say" class="nb-say"></p>
+              <p class="nb-hi" id="ls-say-hi"></p>
+              <span class="nb-skip">clic para continuar</span>
+            </div>
+          </div>
+
+          <div class="alert-flash" id="ls-alert"><span>ALERTA · PROTOCOLO DE CAMUFLAJE EXIGE INVERSIÓN</span></div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Código Qiskit -->
+    <div class="modal" id="ls-code-modal">
+      <div class="modal-card wide l1-modal">
+        <button class="modal-close-icon" id="ls-code-x" data-close aria-label="Cerrar">&times;</button>
+        <p class="kicker"><span class="kicker-line"></span> LO QUE EJECUTÓ EL SERVIDOR CON QISKIT</p>
+        <pre id="ls-diagram">Todavía no has ejecutado el circuito.</pre>
+        <pre id="ls-code"></pre>
+        <div class="modal-card-foot">
+          <button class="lv-btn" id="ls-code-close" data-close style="--accent:#3ee08f">CERRAR</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nivel completado -->
+    <div class="modal" id="ls-win">
+      <div class="modal-card l1-modal">
+        <p class="kicker"><span class="kicker-line"></span> NIVEL 02 COMPLETADO</p>
+        <h2 class="briefing-title">SINTONÍA <span>PERFECTA</span></h2>
+        <div class="l1-stars" id="ls-stars"></div>
+        <div class="l1-stats" id="ls-stats"></div>
+        <ul class="l1-learned">
+          <li><b>Compuerta CNOT:</b> conecta dos qubits y crea <b>entrelazamiento</b> si el primero está en superposición.</li>
+          <li><b>Correlación cuántica:</b> permite medir el grado de acuerdo (+1.0) u oposición (-1.0) entre subsistemas.</li>
+          <li>¡Has conectado 2 qubits por primera vez! Ahora tienes la base para entender el <b>SWAP test y KNN</b> en el siguiente nivel.</li>
+        </ul>
+        <div class="l1-actions">
+          <button class="btn-text" id="ls-retry">Repetir nivel</button>
+          <button class="btn-text" id="ls-map">Misiones</button>
+          <button class="lv-btn" id="ls-next" style="--accent:#3ee08f">SIGUIENTE NIVEL
+            <svg viewBox="0 0 24 24"><path d="M4 12 H19 M13 6 L19 12 L13 18"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== NIVEL 3: EL DESPLIEGUE ========== -->
   <section id="screen-level2" class="screen lvl lvl2">
     <header class="lvl-hud">
       <button class="hud-btn" id="l2-exit"><svg viewBox="0 0 24 24"><path d="M20 12 H5 M11 6 L5 12 L11 18"/></svg> MISIONES</button>
-      <div class="hud-title"><span>NIVEL 02</span> EL DESPLIEGUE</div>
+      <div class="hud-title"><span>NIVEL 03</span> EL DESPLIEGUE</div>
       <div class="hud-phase" id="l2-phase">BRIEFING</div>
       <div class="hud-right">
         <button class="hud-btn" id="l2-dict"><svg viewBox="0 0 24 24"><path d="M4 4 H10 A2 2 0 0 1 12 6 V20 A2 2 0 0 0 10 18 H4 Z M20 4 H14 A2 2 0 0 0 12 6 V20 A2 2 0 0 1 14 18 H20 Z"/></svg> DICCIONARIO</button>
@@ -423,27 +615,32 @@
       </aside>
 
       <main class="lvl-scene">
-        <div class="scene-frame" id="l2-frame" style="aspect-ratio: 1264 / 1144; width: min(100%, calc((100vh - 100px) * 1264 / 1144));">
-          <img src="{{ url_for('static', filename='img/nivel2-escena.jpg') }}" alt="NOVA analizando el mapa táctico de operarios">
-          <svg viewBox="0 0 1264 1144" class="scene-fx map-fx" id="l2-map">
+        <div class="scene-frame" id="l2-frame" style="aspect-ratio: 1200 / 896; width: min(100%, calc((100vh - 100px) * 1200 / 896));">
+          <img src="{{ url_for('static', filename='img/cockpit-deepspace.jpg') }}" alt="Puente de mando - Radar táctico de operarios">
+          <svg viewBox="0 0 1200 896" class="scene-fx map-fx" id="l2-map">
             <defs>
               <pattern id="l2-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0 H0 V40" fill="none" stroke="rgba(99,216,230,.12)" stroke-width="1"/></pattern>
               <linearGradient id="l2-cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9f6ff" stop-opacity=".85"/><stop offset="1" stop-color="#9fd8ff" stop-opacity=".1"/></linearGradient>
             </defs>
-            <rect x="22" y="430" width="968" height="446" rx="10" class="map-bg"/>
-            <rect x="22" y="430" width="968" height="446" rx="10" fill="url(#l2-grid)"/>
-            <text x="44" y="462" class="map-title">MAPA TÁCTICO · OPERARIOS EN TERRENO</text>
+            <rect x="180" y="240" width="840" height="460" rx="14" class="map-bg"/>
+            <rect x="180" y="240" width="840" height="460" rx="14" fill="url(#l2-grid)"/>
+            <text x="206" y="275" class="map-title">RADAR TÁCTICO · OPERARIOS EN TERRENO</text>
             <polygon id="l2-cone-shape" class="scan-cone" points="0,0 0,0 0,0" fill="url(#l2-cone)"/>
             <g id="l2-lines"></g>
             <line id="l2-drag" class="drag-line" x1="0" y1="0" x2="0" y2="0"/>
             <g id="l2-points"></g>
           </svg>
 
-          <div class="nova-bubble b2" id="l2-bubble">
-            <span class="nb-tag">NOVA</span>
-            <p id="l2-say" class="nb-say"></p>
-            <p class="nb-hi" id="l2-say-hi"></p>
-            <span class="nb-skip">clic para continuar</span>
+          <div class="nova-companion l2" id="l2-companion">
+            <div class="nova-avatar-wrap">
+              <img src="{{ url_for('static', filename='img/nova-robot.png') }}" alt="NOVA" class="nova-avatar-img">
+            </div>
+            <div class="nova-bubble b2" id="l2-bubble">
+              <span class="nb-tag">NOVA</span>
+              <p id="l2-say" class="nb-say"></p>
+              <p class="nb-hi" id="l2-say-hi"></p>
+              <span class="nb-skip">clic para continuar</span>
+            </div>
           </div>
 
           <div class="map-legend">
@@ -457,16 +654,19 @@
 
     <div class="modal" id="l2-code-modal">
       <div class="modal-card wide l1-modal">
+        <button class="modal-close-icon" id="l2-code-x" data-close aria-label="Cerrar">&times;</button>
         <p class="kicker"><span class="kicker-line"></span> RADAR DE INTERFERENCIA · QISKIT</p>
         <pre id="l2-diagram">Todavía no has ejecutado el radar.</pre>
         <pre id="l2-code"></pre>
-        <button class="lv-btn" data-close style="--accent:#ffd36e">CERRAR</button>
+        <div class="modal-card-foot">
+          <button class="lv-btn" id="l2-code-close" data-close style="--accent:#ffd36e">CERRAR</button>
+        </div>
       </div>
     </div>
 
     <div class="modal" id="l2-win">
       <div class="modal-card l1-modal">
-        <p class="kicker"><span class="kicker-line"></span> NIVEL 02 COMPLETADO</p>
+        <p class="kicker"><span class="kicker-line"></span> NIVEL 03 COMPLETADO</p>
         <h2 class="briefing-title">DESPLIEGUE <span>EXITOSO</span></h2>
         <div class="l1-stars" id="l2-stars"></div>
         <div class="l1-stats" id="l2-stats"></div>
@@ -477,17 +677,18 @@
         </ul>
         <div class="l1-actions">
           <button class="btn-text" id="l2-retry">Repetir nivel</button>
-          <button class="lv-btn" id="l2-next" style="--accent:#ffd36e">VOLVER A MISIONES <svg viewBox="0 0 24 24"><path d="M4 12 H19 M13 6 L19 12 L13 18"/></svg></button>
+          <button class="btn-text" id="l2-map-btn">Misiones</button>
+          <button class="lv-btn" id="l2-next" style="--accent:#ffd36e">SIGUIENTE NIVEL <svg viewBox="0 0 24 24"><path d="M4 12 H19 M13 6 L19 12 L13 18"/></svg></button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== NIVEL 3: LA COSECHA ========== -->
+  <!-- ========== NIVEL 4: LA COSECHA ========== -->
   <section id="screen-level3" class="screen lvl lvl3">
     <header class="lvl-hud">
       <button class="hud-btn" id="l3-exit"><svg viewBox="0 0 24 24"><path d="M20 12 H5 M11 6 L5 12 L11 18"/></svg> MISIONES</button>
-      <div class="hud-title"><span>NIVEL 03</span> LA COSECHA</div>
+      <div class="hud-title"><span>NIVEL 04</span> LA COSECHA</div>
       <div class="hud-phase" id="l3-phase">BRIEFING</div>
       <div class="hud-right">
         <button class="hud-btn" id="l3-dict"><svg viewBox="0 0 24 24"><path d="M4 4 H10 A2 2 0 0 1 12 6 V20 A2 2 0 0 0 10 18 H4 Z M20 4 H14 A2 2 0 0 0 12 6 V20 A2 2 0 0 1 14 18 H20 Z"/></svg> DICCIONARIO</button>
@@ -536,14 +737,19 @@
       </aside>
 
       <main class="lvl-scene">
-        <div class="scene-frame" id="l3-frame" style="aspect-ratio: 1404 / 1144; width: min(100%, calc((100vh - 100px) * 1404 / 1144));">
-          <img src="{{ url_for('static', filename='img/nivel3-escena.jpg') }}" alt="NOVA frente al mapa de datos de arándanos">
+        <div class="scene-frame" id="l3-frame" style="aspect-ratio: 1200 / 896; width: min(100%, calc((100vh - 100px) * 1200 / 896));">
+          <img src="{{ url_for('static', filename='img/cockpit-deepspace.jpg') }}" alt="Puente de mando - Clasificación cuántica de arándanos">
           <div class="plot-wrap"><canvas id="l3-canvas"></canvas><span class="plot-tag" id="l3-plot-tag">DATOS SIN CLASIFICAR</span></div>
-          <div class="nova-bubble b3" id="l3-bubble">
-            <span class="nb-tag">NOVA</span>
-            <p id="l3-say" class="nb-say"></p>
-            <p class="nb-hi" id="l3-say-hi"></p>
-            <span class="nb-skip">clic para continuar</span>
+          <div class="nova-companion l3" id="l3-companion">
+            <div class="nova-avatar-wrap">
+              <img src="{{ url_for('static', filename='img/nova-robot.png') }}" alt="NOVA" class="nova-avatar-img">
+            </div>
+            <div class="nova-bubble b3" id="l3-bubble">
+              <span class="nb-tag">NOVA</span>
+              <p id="l3-say" class="nb-say"></p>
+              <p class="nb-hi" id="l3-say-hi"></p>
+              <span class="nb-skip">clic para continuar</span>
+            </div>
           </div>
         </div>
       </main>
@@ -551,16 +757,19 @@
 
     <div class="modal" id="l3-code-modal">
       <div class="modal-card wide l1-modal">
+        <button class="modal-close-icon" id="l3-code-x" data-close aria-label="Cerrar">&times;</button>
         <p class="kicker"><span class="kicker-line"></span> RED NEURONAL CUÁNTICA · QISKIT</p>
         <pre id="l3-diagram">Todavía no has ejecutado el modelo.</pre>
         <pre id="l3-code"></pre>
-        <button class="lv-btn" data-close style="--accent:#a98bff">CERRAR</button>
+        <div class="modal-card-foot">
+          <button class="lv-btn" id="l3-code-close" data-close style="--accent:#a98bff">CERRAR</button>
+        </div>
       </div>
     </div>
 
     <div class="modal" id="l3-win">
       <div class="modal-card l1-modal">
-        <p class="kicker"><span class="kicker-line"></span> NIVEL 03 COMPLETADO</p>
+        <p class="kicker"><span class="kicker-line"></span> NIVEL 04 COMPLETADO</p>
         <h2 class="briefing-title">COSECHA <span>SALVADA</span></h2>
         <div class="l1-stars" id="l3-stars"></div>
         <div class="l1-stats" id="l3-stats"></div>
@@ -596,17 +805,89 @@
     </div>
   </div>
 
+  <!-- Modal Leaderboard -->
+  <div class="modal" id="modal-leaderboard">
+    <div class="modal-card wide l1-modal" style="max-width: 680px;">
+      <button class="modal-close-icon" data-close aria-label="Cerrar">&times;</button>
+      <p class="kicker"><span class="kicker-line"></span> CUADRO DE HONOR · MODO EXPERTO</p>
+      <h2 class="briefing-title" style="margin-bottom: 14px;">TABLA DE <span>LEADERBOARD</span></h2>
+      <p style="color: #aab3d6; font-size: 0.88rem; margin-bottom: 18px;">
+        Mejores tiempos completando todos los niveles sin asistencia de NOVA ni diccionario con límite de 1:30 min por nivel.
+      </p>
+      <div id="leaderboard-table-wrap" style="max-height: 340px; overflow-y: auto; margin-bottom: 18px; border: 1px solid rgba(142, 153, 196, 0.2); border-radius: 8px;">
+        <table style="width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 0.85rem; text-align: left;">
+          <thead>
+            <tr style="background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(142, 153, 196, 0.2); color: #63d8e6;">
+              <th style="padding: 10px 14px;">#</th>
+              <th style="padding: 10px 14px;">CORREO</th>
+              <th style="padding: 10px 14px; text-align: right;">TIEMPO</th>
+              <th style="padding: 10px 14px; text-align: right;">FECHA</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <tr><td colspan="4" style="text-align: center; padding: 20px; color: #8e99c4;">Cargando clasificaciones...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-card-foot">
+        <button class="lv-btn" data-close style="--accent:#ffd36e">CERRAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Fallo por Tiempo Agotado (Challenge) -->
+  <div class="modal" id="modal-challenge-fail">
+    <div class="modal-card l1-modal">
+      <p class="kicker" style="color:#ff5c7a"><span class="kicker-line" style="background:#ff5c7a"></span> TIEMPO AGOTADO (1:30 MIN)</p>
+      <h2 class="briefing-title" style="color:#ff5c7a">MISIÓN <span>FALLIDA</span></h2>
+      <p style="margin: 16px 0 24px; color: #e9edf7; font-size: 0.95rem; line-height: 1.5;">
+        El tiempo límite de 1 minuto y 30 segundos expiró antes de lograr estabilizar los sistemas cuánticos. En este modo extremo no hay margen de error.
+      </p>
+      <div class="l1-actions" style="display:flex; justify-content:center; gap:12px;">
+        <button class="btn-text" id="btn-challenge-retry-level">Reintentar este nivel</button>
+        <button class="lv-btn" id="btn-challenge-exit-map" style="--accent:#ff5c7a">VOLVER A MISIONES</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Victoria del Reto Completo (Guardar en Leaderboard) -->
+  <div class="modal" id="modal-challenge-win">
+    <div class="modal-card l1-modal">
+      <p class="kicker" style="color:#3ee08f"><span class="kicker-line" style="background:#3ee08f"></span> DESAFÍO EXPERTO COMPLETADO</p>
+      <h2 class="briefing-title">¡RETO <span>SUPERADO!</span></h2>
+      <p style="margin: 14px 0 10px; color: #e9edf7; font-size: 0.95rem;">
+        ¡Completaste todos los niveles sin la ayuda de NOVA, sin diccionario y antes del límite de tiempo!
+      </p>
+      <div style="background: rgba(5, 12, 30, 0.7); border: 1px solid rgba(62, 224, 143, 0.4); border-radius: 8px; padding: 14px; margin: 16px 0; text-align: center;">
+        <div style="font-family: 'Space Mono', monospace; font-size: 0.75rem; color: #8e99c4; letter-spacing: 0.15em;">TIEMPO TOTAL ACUMULADO</div>
+        <div id="challenge-total-display" style="font-family: 'Anton', sans-serif; font-size: 2.6rem; color: #3ee08f; margin-top: 4px;">00:00</div>
+      </div>
+      <div style="text-align: left; margin: 18px 0;">
+        <label for="challenge-email-input" style="display: block; font-family: 'Space Mono', monospace; font-size: 0.72rem; color: #ffd36e; margin-bottom: 6px; letter-spacing: 0.1em;">
+          INGRESA TU CORREO PARA REGISTRARTE EN EL LEADERBOARD:
+        </label>
+        <input type="email" id="challenge-email-input" placeholder="tu-correo@ejemplo.com"
+          style="width: 100%; box-sizing: border-box; background: rgba(10, 18, 44, 0.9); border: 1px solid rgba(255, 211, 110, 0.5); border-radius: 6px; padding: 10px 14px; color: #fff; font-family: 'Space Mono', monospace; font-size: 0.9rem; outline: none;">
+      </div>
+      <div class="l1-actions" style="display:flex; justify-content:space-between; align-items:center;">
+        <button class="btn-text" id="btn-challenge-skip-submit">Omitir</button>
+        <button class="lv-btn" id="btn-challenge-submit-email" style="--accent:#ffd36e">GUARDAR EN LEADERBOARD</button>
+      </div>
+    </div>
+  </div>
+
   <div class="tooltip" id="tooltip"></div>
   <div class="toast" id="toast"></div>
 
   <script src="{{ url_for('static', filename='js/nova.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/game.js') }}"></script>
   <script src="{{ url_for('static', filename='js/chapters.js') }}"></script>
   <script src="{{ url_for('static', filename='js/levels.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/game.js') }}"></script>
   <script src="{{ url_for('static', filename='js/landing.js') }}"></script>
   <script src="{{ url_for('static', filename='js/intro.js') }}"></script>
   <script src="{{ url_for('static', filename='js/levelkit.js') }}"></script>
   <script src="{{ url_for('static', filename='js/level1.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/levelsintonia.js') }}"></script>
   <script src="{{ url_for('static', filename='js/level2.js') }}"></script>
   <script src="{{ url_for('static', filename='js/level3.js') }}"></script>
 </body>

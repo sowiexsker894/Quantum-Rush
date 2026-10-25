@@ -93,6 +93,73 @@ def balance(gates, shots=1000):
     }
 
 
+# ---------- Nivel 2: La Sintonía (Baliza Alfa = q0, Baliza Beta = q1) ----------
+
+def sintonia(gates, shots=1000):
+    """Ejecuta el circuito de 2 qubits de La Sintonía (entrelazamiento y correlación)."""
+    shots = max(1, min(int(shots), MAX_SHOTS))
+    qc = build_circuit(2, gates)
+    state = Statevector(qc)
+    probs_dict = state.probabilities_dict()
+    memory = state.sample_memory(shots)
+    
+    # Qiskit ordena qubits como q1q0 en las cadenas binarias.
+    # Normalizamos a Alfa-Beta (q0, q1) invirtiendo la cadena de 2 caracteres.
+    counts = {"00": 0, "01": 0, "10": 0, "11": 0}
+    sequence = []
+    for m in memory:
+        ab = m[::-1]
+        counts[ab] = counts.get(ab, 0) + 1
+        sequence.append(ab)
+        
+    probabilities = {
+        "00": round(float(probs_dict.get("00", 0.0)), 4),
+        "01": round(float(probs_dict.get("10", 0.0)), 4),  # q0=0, q1=1
+        "10": round(float(probs_dict.get("01", 0.0)), 4),  # q0=1, q1=0
+        "11": round(float(probs_dict.get("11", 0.0)), 4),
+    }
+    
+    agree_shots = counts["00"] + counts["11"]
+    disagree_shots = counts["01"] + counts["10"]
+    theory_agree = probabilities["00"] + probabilities["11"]
+    
+    # Correlación de Pearson cuántica: +1.0 (acuerdo total), -1.0 (oposición total), 0.0 (independientes)
+    correlation = round((agree_shots - disagree_shots) / shots, 4)
+    theory_correlation = round(theory_agree - (probabilities["01"] + probabilities["10"]), 4)
+
+    lines = [
+        "from qiskit import QuantumCircuit",
+        "from qiskit.quantum_info import Statevector",
+        "",
+        "qc = QuantumCircuit(2)  # q0 = Baliza Alfa, q1 = Baliza Beta",
+    ]
+    for g in gates:
+        name = g.get("gate")
+        if name in ("h", "x", "y", "z"):
+            lines.append(f"qc.{name}({g['q']})")
+        elif name == "cx":
+            lines.append(f"qc.cx({g['c']}, {g['t']})  # compuerta CNOT (entrelazamiento)")
+    lines += [
+        "",
+        "estado = Statevector(qc)",
+        f"conteos = estado.sample_counts({shots})",
+        "print('Acuerdo:', (conteos.get('00', 0) + conteos.get('11', 0)) / shots)",
+    ]
+
+    return {
+        "counts": counts,
+        "probabilities": probabilities,
+        "theory_agree": round(theory_agree, 4),
+        "measured_agree": round(agree_shots / shots, 4),
+        "theory_correlation": theory_correlation,
+        "correlation": correlation,
+        "shots": shots,
+        "sequence": sequence[:60],
+        "diagram": qc.draw(output="text").single_string(),
+        "code": "\n".join(lines),
+    }
+
+
 # ---------- Capítulo 4: clasificador cuántico de 1 qubit ----------
 
 def make_meteor_dataset(n=24, seed=7):

@@ -13,8 +13,10 @@ const l3Say = Kit.makeSay('l3');
 const l3Hl = (...s) => Kit.highlight('screen-level3', ...s);
 const pct3 = v => Math.round(v * 100) + '%';
 
-l3('l3-dict').onclick = () => Kit.openGlossary('Diccionario · Nivel 3', L3_TERMS);
+const closeL3Code = () => { l3('l3-code-modal').classList.remove('open'); Kit.sfx('click'); };
 l3('l3-code-btn').onclick = () => l3('l3-code-modal').classList.add('open');
+const l3CodeClose = l3('l3-code-close'); if (l3CodeClose) l3CodeClose.onclick = closeL3Code;
+const l3CodeX = l3('l3-code-x'); if (l3CodeX) l3CodeX.onclick = closeL3Code;
 
 function l3SetPhase(phase) {
   L3.phase = phase;
@@ -325,7 +327,15 @@ async function l3Train() {
 
 async function l3Win(acc) {
   l3SetPhase('done');
-  L3.timer.stop();
+  let elapsed = 0;
+  if (L3.timer) elapsed = L3.timer.stop();
+
+  if (window.CHALLENGE_MODE && typeof window.onChallengeLevelWin === 'function') {
+    Kit.sfx('success');
+    window.onChallengeLevelWin(elapsed);
+    return;
+  }
+
   Kit.sfx('success');
   await l3Say([
     { t: `¡[[Convergencia]] alcanzada! Precisión ${pct3(acc)}. La frontera cuántica aisló la fruta defectuosa.`, hold: 3800 },
@@ -363,7 +373,7 @@ async function startLevel3() {
   clearTimeout(L3.offerTimer);
   if (L3.timer) L3.timer.stop();
   l3('l3-win').classList.remove('open');
-  l3('l3-timer').textContent = '00:00';
+  l3('l3-timer').textContent = window.CHALLENGE_MODE ? '01:30' : '00:00';
   l3('l3-run').disabled = false;
   l3Optim.disabled = true; l3Optim.classList.remove('attached');
   ['l3-acc', 'l3-err'].forEach(id => l3(id).textContent = '—');
@@ -381,7 +391,7 @@ async function startLevel3() {
     { t: 'El problema: los datos son un caos [[no lineal]]. Los dañados rodean a los sanos: ninguna línea recta los separa.', hold: 4200 },
     { t: 'Necesitamos una IA que aprenda: una [[red neuronal cuántica]].', hi: 'Construye el cerebro: arrastra Ry, Rx y CNOT al circuito.', hold: 100 },
   ]);
-  if (L3.phase !== 'intro') return;
+  if (L3.phase !== 'intro' && !window.CHALLENGE_MODE) return;
   l3SetPhase('p1');
   l3RenderGates();
   l3Hl('#l3-gates .gate-tile', '#screen-level3 .slot');

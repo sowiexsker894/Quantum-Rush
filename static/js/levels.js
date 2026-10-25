@@ -1,4 +1,4 @@
-// Pantalla de selección de niveles (los 3 niveles del guion "Proyecto NOVA").
+// Pantalla de selección de niveles (los 4 niveles del guion "Proyecto NOVA").
 const LEVELS = [
   {
     id: 'balance', num: '01', name: 'El Balance', accent: '#63d8e6',
@@ -9,7 +9,15 @@ const LEVELS = [
     chapter: null, start: () => startLevel1(),
   },
   {
-    id: 'despliegue', num: '02', name: 'El Despliegue', accent: '#ffd36e',
+    id: 'sintonia', num: '02', name: 'La Sintonía', accent: '#3ee08f',
+    concept: 'Correlación y Entrelazamiento',
+    desc: 'Dos balizas espaciales deben coordinar sus decisiones de emergencia a distancia. Entrelázalas con CNOT para sincronizarlas al 100%.',
+    tags: [['q', 'CNOT'], ['q', 'Entrelazamiento'], ['s', 'Correlación']],
+    gates: 'H · CNOT · X', difficulty: 2,
+    chapter: null, start: () => startLevelSintonia(),
+  },
+  {
+    id: 'despliegue', num: '03', name: 'El Despliegue', accent: '#ffd36e',
     concept: 'Similitud cuántica y KNN',
     desc: 'Hay escuadrones sin diagnóstico. Mide qué tan parecidos son a operarios sanos o exhaustos y clasifícalos por mayoría de vecinos.',
     tags: [['q', 'SWAP Test'], ['s', 'Similitud'], ['m', 'K vecinos']],
@@ -17,7 +25,7 @@ const LEVELS = [
     chapter: null, start: () => startLevel2(),
   },
   {
-    id: 'cosecha', num: '03', name: 'La Cosecha', accent: '#a98bff',
+    id: 'cosecha', num: '04', name: 'La Cosecha', accent: '#a98bff',
     concept: 'Clasificador variacional cuántico',
     desc: 'Los arándanos sanos y dañados están mezclados en espirales. Construye una red neuronal cuántica y entrénala para separarlos.',
     tags: [['q', 'Entrelazamiento'], ['m', 'Red neuronal'], ['m', 'Entrenamiento']],
@@ -27,8 +35,9 @@ const LEVELS = [
 ];
 
 const NOVA_LINES = [
-  'Operador, hay tres crisis activas. Empecemos por la primera: el País A y el País B se están quedando sin energía.',
-  'La energía está balanceada. Ahora los equipos de rescate necesitan un diagnóstico. Vamos al Nivel 2.',
+  'Operador, hay cuatro crisis activas. Empecemos por la primera: el País A y el País B se están quedando sin energía.',
+  'La energía está balanceada. Ahora necesitamos sincronizar las balizas de comunicación de emergencia con CNOT.',
+  'Las balizas están en sintonía. Ahora los equipos de rescate necesitan un diagnóstico táctico con KNN.',
   'Último paso: la cosecha. Necesitamos una red neuronal cuántica... y tú vas a entrenarla.',
   'Misión completa. El sistema Nexus está a salvo. Gracias, Operador.',
 ];
@@ -90,7 +99,34 @@ function visualCosecha() {
       <animate attributeName="ry" values="1;1;40;40;1" keyTimes="0;0.2;0.55;0.9;1" dur="7s" repeatCount="indefinite"/>
     </ellipse>`;
 }
-const VISUALS = { balance: visualBalance, despliegue: visualDespliegue, cosecha: visualCosecha };
+function visualSintonia() {
+  const pulses = [0, 1, 2].map(i =>
+    `<circle r="5" fill="#3ee08f" opacity="0.9">
+      <animateMotion dur="2.4s" begin="${i * 0.8}s" repeatCount="indefinite" path="M80 88 C130 46 190 130 240 88 C190 46 130 130 80 88"/>
+    </circle>`).join('');
+  return `
+    <line x1="80" y1="88" x2="240" y2="88" stroke="rgba(62,224,143,0.3)" stroke-width="2" stroke-dasharray="4 4"/>
+    <path d="M80 88 C130 46 190 130 240 88 C190 46 130 130 80 88" fill="none" stroke="#3ee08f" stroke-width="2" opacity="0.5"/>
+    ${pulses}
+    <g transform="translate(80 88)">
+      <circle r="22" fill="none" stroke="#3ee08f" stroke-width="1.5" opacity="0.4"><animate attributeName="r" values="16;25;16" dur="2.2s" repeatCount="indefinite"/></circle>
+      <circle r="14" fill="#071a24" stroke="#3ee08f" stroke-width="2"/>
+      <text y="4" fill="#3ee08f" font-family="'Space Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">q₀</text>
+      <text y="30" fill="#8e99c4" font-family="'Space Mono', monospace" font-size="9" font-weight="700" text-anchor="middle">ALFA</text>
+    </g>
+    <g transform="translate(240 88)">
+      <circle r="22" fill="none" stroke="#3ee08f" stroke-width="1.5" opacity="0.4"><animate attributeName="r" values="25;16;25" dur="2.2s" repeatCount="indefinite"/></circle>
+      <circle r="14" fill="#071a24" stroke="#3ee08f" stroke-width="2"/>
+      <text y="4" fill="#3ee08f" font-family="'Space Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">q₁</text>
+      <text y="30" fill="#8e99c4" font-family="'Space Mono', monospace" font-size="9" font-weight="700" text-anchor="middle">BETA</text>
+    </g>
+    <g transform="translate(160 88)">
+      <circle r="12" fill="#0b1736" stroke="#ffd36e" stroke-width="1.8"/>
+      <path d="M-6 0 H6 M0 -6 V6" stroke="#ffd36e" stroke-width="2"/>
+    </g>`;
+}
+
+const VISUALS = { balance: visualBalance, sintonia: visualSintonia, despliegue: visualDespliegue, cosecha: visualCosecha };
 
 // ---------- Render ----------
 function levelStars(lv) {
@@ -101,8 +137,12 @@ function renderLevels() {
   const stars = LEVELS.map(levelStars);
   const done = stars.filter(Boolean).length;
   $('#lv-done').textContent = done;
+  const lvTotal = $('#lv-total');
+  if (lvTotal) lvTotal.textContent = LEVELS.length;
   $('#stars-count').textContent = stars.reduce((a, b) => a + b, 0);
-  $('#map-bubble').textContent = NOVA_LINES[done];
+  const starsTotal = $('#stars-total');
+  if (starsTotal) starsTotal.textContent = LEVELS.length * 3;
+  $('#map-bubble').textContent = NOVA_LINES[done] || NOVA_LINES[NOVA_LINES.length - 1];
 
   const starSVG = on => `<svg viewBox="0 0 24 24" class="${on ? 'on' : ''}"><path d="M12 2 L14.6 8.6 L21.5 9.2 L16.2 13.8 L17.8 20.6 L12 17 L6.2 20.6 L7.8 13.8 L2.5 9.2 L9.4 8.6 Z"/></svg>`;
   $('#planet-grid').innerHTML = LEVELS.map((lv, i) => {
@@ -110,7 +150,7 @@ function renderLevels() {
     const state = stars[i] ? 'done' : locked ? 'locked' : 'open';
     const stateText = { done: 'COMPLETADO', locked: 'BLOQUEADO', open: 'DISPONIBLE' }[state];
     return `
-      <article class="level-card state-${state}" style="--accent:${lv.accent}; animation-delay:${0.1 + i * 0.12}s">
+      <article class="level-card state-${state}" data-i="${i}" style="--accent:${lv.accent}; animation-delay:${0.1 + i * 0.12}s">
         <div class="lv-visual">
           <svg viewBox="0 0 320 176">${VISUALS[lv.id]()}</svg>
           ${locked ? `<div class="lv-lock"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11 V7 A4 4 0 0 1 16 7 V11"/></svg><span>Completa el nivel ${LEVELS[i - 1].num}</span></div>` : ''}
@@ -136,13 +176,252 @@ function renderLevels() {
       </article>`;
   }).join('');
 
-  $$('.lv-btn:not([disabled])').forEach(b => b.onclick = () => {
-    const lv = LEVELS[+b.dataset.i];
-    if (lv.start) return lv.start();
-    if (lv.chapter == null) return toast(`El nivel ${lv.num} se está construyendo`);
-    startChapter(lv.chapter);
+  $$('#planet-grid .level-card:not(.state-locked)').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.onclick = () => {
+      const lv = LEVELS[+card.dataset.i];
+      if (!lv) return;
+      if (lv.start) return lv.start();
+      if (lv.chapter == null) return toast(`El nivel ${lv.num} se está construyendo`);
+      startChapter(lv.chapter);
+    };
   });
+
+  // Renderizar o actualizar tarjeta del Desafío Contrarreloj (Sin NOVA ni ayudas)
+  renderChallengeCard(done >= LEVELS.length);
 }
 
-document.getElementById('btn-home').onclick = () => show('screen-title');
-document.getElementById('btn-see-briefing').onclick = () => show('screen-briefing');
+// ---------------------------------------------------------------- MODO DESAFÍO Y LEADERBOARD
+const CHALLENGE_ORDER = [
+  () => startLevel1(),
+  () => startLevelSintonia(),
+  () => startLevel2(),
+  () => startLevel3()
+];
+
+let challengeCurrentIndex = 0;
+let challengeLevelTimes = [];
+let challengeRunTotalSeconds = 0;
+
+window.CHALLENGE_MODE = false;
+
+function renderChallengeCard(unlocked) {
+  let card = $('#challenge-card-container');
+  if (!card) {
+    card = document.createElement('div');
+    card.id = 'challenge-card-container';
+    const grid = $('#planet-grid');
+    if (grid && grid.parentNode) {
+      grid.parentNode.insertBefore(card, grid.nextSibling);
+    }
+  }
+  if (!card) return;
+
+  if (unlocked) {
+    card.innerHTML = `
+      <section class="challenge-card unlocked">
+        <div>
+          <span style="font-family:'Space Mono', monospace; font-size:0.7rem; color:#ff5c7a; font-weight:700; letter-spacing:0.2em;">
+            [MODO EXTREMO DESBLOQUEADO]
+          </span>
+          <h3>DESAFÍO CONTRARRELOJ · SIN AYUDAS</h3>
+          <p>
+            Demuestra tu dominio cuántico total: completa los 4 niveles consecutivos <strong>sin la guía de NOVA, sin pistas y sin diccionario</strong>.
+            Cuentas con <strong>1:30 minutos por nivel</strong>. Si el tiempo expira, pierdes. Al terminar podrás ingresar tu correo para quedar en el Leaderboard.
+          </p>
+        </div>
+        <button class="btn-challenge" id="btn-start-challenge">
+          INICIAR RETO
+        </button>
+      </section>
+    `;
+    const btn = $('#btn-start-challenge');
+    if (btn) btn.onclick = () => startChallengeRun();
+  } else {
+    card.innerHTML = `
+      <section class="challenge-card locked">
+        <div>
+          <span style="font-family:'Space Mono', monospace; font-size:0.7rem; color:#8e99c4; font-weight:700; letter-spacing:0.2em;">
+            [MODO EXTREMO BLOQUEADO]
+          </span>
+          <h3>DESAFÍO CONTRARRELOJ · SIN AYUDAS</h3>
+          <p>
+            Completa todos los 4 niveles de la campaña principal para desbloquear esta prueba de velocidad sin asistencia de NOVA ni diccionario.
+          </p>
+        </div>
+        <button class="btn-challenge" disabled>
+          BLOQUEADO
+        </button>
+      </section>
+    `;
+  }
+}
+
+function startChallengeRun() {
+  window.CHALLENGE_MODE = true;
+  document.body.classList.add('challenge-mode');
+  challengeCurrentIndex = 0;
+  challengeLevelTimes = [];
+  challengeRunTotalSeconds = 0;
+  startChallengeCurrentLevel();
+}
+
+function startChallengeCurrentLevel() {
+  if (challengeCurrentIndex >= CHALLENGE_ORDER.length) {
+    finishChallengeRun();
+    return;
+  }
+  const launcher = CHALLENGE_ORDER[challengeCurrentIndex];
+  if (typeof launcher === 'function') {
+    launcher();
+  }
+}
+
+// Handler llamado cuando el temporizador de 1:30 llega a 0
+window.onChallengeTimeout = function() {
+  if (!window.CHALLENGE_MODE) return;
+  // Detener sonidos ambiente y timers activos
+  Kit.ambient(false);
+  Kit.sfx('error');
+  // Ocultar modales de victoria o niveles
+  $$('.modal.open').forEach(m => m.classList.remove('open'));
+  // Mostrar modal de Game Over por tiempo agotado
+  const failModal = $('#modal-challenge-fail');
+  if (failModal) failModal.classList.add('open');
+};
+
+// Handler llamado cuando se gana un nivel dentro del modo desafío
+window.onChallengeLevelWin = function(elapsedSeconds) {
+  if (!window.CHALLENGE_MODE) return false;
+  challengeLevelTimes.push(elapsedSeconds || 0);
+  challengeRunTotalSeconds += (elapsedSeconds || 0);
+  
+  challengeCurrentIndex++;
+  if (challengeCurrentIndex < CHALLENGE_ORDER.length) {
+    // Pasar inmediatamente al siguiente nivel
+    toast(`Nivel superado en ${elapsedSeconds}s. Siguiente nivel...`);
+    setTimeout(() => {
+      startChallengeCurrentLevel();
+    }, 600);
+  } else {
+    // Reto completado con éxito
+    finishChallengeRun();
+  }
+  return true;
+};
+
+function exitChallengeMode() {
+  window.CHALLENGE_MODE = false;
+  document.body.classList.remove('challenge-mode');
+  renderLevels();
+}
+
+function finishChallengeRun() {
+  Kit.sfx('win');
+  const winModal = $('#modal-challenge-win');
+  const mins = Math.floor(challengeRunTotalSeconds / 60);
+  const secs = Math.floor(challengeRunTotalSeconds % 60);
+  const timeFormatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  
+  const display = $('#challenge-total-display');
+  if (display) display.textContent = timeFormatted;
+  
+  if (winModal) winModal.classList.add('open');
+}
+
+// Botones de modales del reto
+const btnRetryLevel = $('#btn-challenge-retry-level');
+if (btnRetryLevel) {
+  btnRetryLevel.onclick = () => {
+    $('#modal-challenge-fail').classList.remove('open');
+    startChallengeCurrentLevel();
+  };
+}
+
+const btnExitFail = $('#btn-challenge-exit-map');
+if (btnExitFail) {
+  btnExitFail.onclick = () => {
+    $('#modal-challenge-fail').classList.remove('open');
+    exitChallengeMode();
+    show('screen-map');
+  };
+}
+
+const btnSkipSubmit = $('#btn-challenge-skip-submit');
+if (btnSkipSubmit) {
+  btnSkipSubmit.onclick = () => {
+    $('#modal-challenge-win').classList.remove('open');
+    exitChallengeMode();
+    show('screen-map');
+  };
+}
+
+const btnSubmitEmail = $('#btn-challenge-submit-email');
+if (btnSubmitEmail) {
+  btnSubmitEmail.onclick = async () => {
+    const input = $('#challenge-email-input');
+    const email = input ? input.value.trim() : '';
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      toast('Por favor ingresa un correo válido');
+      return;
+    }
+    btnSubmitEmail.disabled = true;
+    try {
+      await api('/api/leaderboard', { email, total_seconds: challengeRunTotalSeconds });
+      toast('¡Tiempo registrado con éxito en el Leaderboard!');
+      $('#modal-challenge-win').classList.remove('open');
+      exitChallengeMode();
+      show('screen-map');
+      openLeaderboard();
+    } catch (e) {
+      toast('Error al guardar: ' + e.message);
+    } finally {
+      btnSubmitEmail.disabled = false;
+    }
+  };
+}
+
+// Leaderboard Modal
+async function openLeaderboard() {
+  const modal = $('#modal-leaderboard');
+  const tbody = $('#leaderboard-body');
+  if (!modal || !tbody) return;
+  modal.classList.add('open');
+  tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:#8e99c4;">Cargando clasificaciones...</td></tr>';
+  try {
+    const entries = await api('/api/leaderboard');
+    if (!entries || !entries.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:#8e99c4;">Aún no hay puntuaciones registradas. ¡Sé el primero en completar el reto!</td></tr>';
+      return;
+    }
+    tbody.innerHTML = entries.map((e, idx) => `
+      <tr style="border-bottom: 1px solid rgba(142, 153, 196, 0.15); ${idx === 0 ? 'background:rgba(255,211,110,0.08); font-weight:bold; color:#ffd36e;' : ''}">
+        <td style="padding: 10px 14px;">${idx + 1 === 1 ? '🥇' : idx + 1 === 2 ? '🥈' : idx + 1 === 3 ? '🥉' : idx + 1}</td>
+        <td style="padding: 10px 14px; color:#e9edf7;">${e.email}</td>
+        <td style="padding: 10px 14px; text-align: right; color:#3ee08f; font-weight:700;">${e.time || '--:--'}</td>
+        <td style="padding: 10px 14px; text-align: right; color:#8e99c4; font-size:0.75rem;">${e.date || ''}</td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:20px; color:#ff5c7a;">Error al cargar leaderboard: ${err.message}</td></tr>`;
+  }
+}
+
+const btnLeaderboard = $('#btn-leaderboard');
+if (btnLeaderboard) {
+  btnLeaderboard.onclick = openLeaderboard;
+}
+
+const btnHome = document.getElementById('btn-home');
+if (btnHome) btnHome.onclick = () => {
+  if (window.CHALLENGE_MODE) exitChallengeMode();
+  show('screen-title');
+};
+const btnSeeBriefing = document.getElementById('btn-see-briefing');
+if (btnSeeBriefing) btnSeeBriefing.onclick = () => show('screen-briefing');
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderLevels);
+} else {
+  renderLevels();
+}

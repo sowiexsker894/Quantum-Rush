@@ -89,6 +89,9 @@ const Kit = (() => {
       if (skip) skip();
     });
     function say(lines) {
+      if (window.CHALLENGE_MODE) {
+        return Promise.resolve();
+      }
       const id = ++sayId;
       return (async () => {
         for (const line of lines) {
@@ -111,8 +114,7 @@ const Kit = (() => {
           p.innerHTML = richText(line.t);
           hi.innerHTML = line.hi ? richText(line.hi) : '';
           await new Promise(done => {
-            const t = setTimeout(done, line.hold || Math.max(2200, (plain.length + (line.hi || '').length) * 42));
-            skip = () => { clearTimeout(t); done(); };
+            skip = () => { done(); };
           });
         }
         skip = null;
@@ -124,17 +126,51 @@ const Kit = (() => {
 
   // ---------------------------------------------------------------- Utilidades
   function highlight(screenId, ...sels) {
+    if (window.CHALLENGE_MODE) return;
     document.querySelectorAll(`#${screenId} .hl`).forEach(e => e.classList.remove('hl'));
     sels.forEach(sel => document.querySelectorAll(sel).forEach(e => e.classList.add('hl')));
   }
 
   function timer(el) {
+    if (window.CHALLENGE_MODE) {
+      // Modo reto: cuenta regresiva de 1:30 min (90s).
+      const totalLimit = 90;
+      let left = totalLimit;
+      el.textContent = '01:30';
+      const id = setInterval(() => {
+        left--;
+        if (left < 0) left = 0;
+        const mins = Math.floor(left / 60);
+        const secs = left % 60;
+        el.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+        if (left <= 0) {
+          clearInterval(id);
+          if (typeof window.onChallengeTimeout === 'function') {
+            window.onChallengeTimeout();
+          }
+        }
+      }, 1000);
+      return {
+        stop: () => {
+          clearInterval(id);
+          return totalLimit - left; // Devuelve segundos transcurridos
+        },
+        getElapsed: () => totalLimit - left
+      };
+    }
+
     const t0 = Date.now();
     const id = setInterval(() => {
       const s = Math.floor((Date.now() - t0) / 1000);
       el.textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
     }, 500);
-    return { stop: () => clearInterval(id) };
+    return {
+      stop: () => {
+        clearInterval(id);
+        return Math.floor((Date.now() - t0) / 1000);
+      },
+      getElapsed: () => Math.floor((Date.now() - t0) / 1000)
+    };
   }
 
   function openGlossary(title, terms) {
@@ -145,6 +181,29 @@ const Kit = (() => {
     document.getElementById('modal-glossary').classList.add('open');
     sfx('click');
   }
+
+  // Delegación global para cierre de modales (botón [data-close], clic en fondo oscuro o tecla Escape)
+  document.addEventListener('click', e => {
+    const closeBtn = e.target.closest('[data-close]');
+    if (closeBtn) {
+      const modal = closeBtn.closest('.modal');
+      if (modal) {
+        modal.classList.remove('open');
+        sfx('click');
+      }
+      return;
+    }
+    if (e.target.classList && e.target.classList.contains('modal') && e.target.classList.contains('open')) {
+      e.target.classList.remove('open');
+      sfx('click');
+    }
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open'));
+    }
+  });
 
   const STAR = '<path d="M12 2 L14.6 8.6 L21.5 9.2 L16.2 13.8 L17.8 20.6 L12 17 L6.2 20.6 L7.8 13.8 L2.5 9.2 L9.4 8.6 Z"/>';
   const stars = n => [1, 2, 3].map(s => `<svg viewBox="0 0 24 24" class="${s <= n ? 'on' : ''}">${STAR}</svg>`).join('');

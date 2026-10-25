@@ -85,10 +85,10 @@
 @keyframes dashMove { to { stroke-dashoffset: -12; } }
 
 .nova-bubble.b2 { left: 12.6%; top: 4.4%; width: 40%; min-height: 19%; }
-.map-legend { position: absolute; left: 23.3%; top: 76.7%; width: 21.4%; height: 13.5%; display: flex; flex-direction: column; justify-content: center; gap: .8cqw;
-  padding: 0 2cqw; background: #070f26; border: 1px solid rgba(99, 216, 230, .35); border-radius: 1.2cqw; font: 700 1.6cqw 'Saira Condensed', sans-serif; color: #e9edf7; letter-spacing: .05em; }
-.map-legend span { display: flex; align-items: center; gap: 1cqw; }
-.lg { width: 1.8cqw; height: 1.8cqw; border-radius: 50%; display: inline-block; }
+.map-legend { position: absolute; left: 50%; transform: translateX(-50%); bottom: 13%; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 22px;
+  padding: 8px 24px; background: rgba(7, 15, 38, .92); border: 1.5px solid rgba(99, 216, 230, .4); border-radius: 999px; font: 700 0.82rem 'Space Mono', monospace; color: #e9edf7; letter-spacing: .08em; box-shadow: 0 0 16px rgba(99, 216, 230, .2); z-index: 5; }
+.map-legend span { display: flex; align-items: center; gap: 8px; }
+.lg { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
 .lg.apt { background: #3ee08f; box-shadow: 0 0 8px #3ee08f; } .lg.tired { background: #ff5c7a; box-shadow: 0 0 8px #ff5c7a; } .lg.gray { background: #a5adc9; }
 
 /* ================= NIVEL 3: LA COSECHA ================= */
@@ -134,13 +134,243 @@
 .knob input:disabled { cursor: not-allowed; opacity: .5; }
 .knob output { color: var(--ink); }
 
-.nova-bubble.b3 { left: 1%; top: 3.5%; width: 43%; min-height: 17%; }
-.plot-wrap { position: absolute; left: 31.7%; top: 13.1%; width: 56.6%; height: 67.3%; background: #061226; border: 1px solid rgba(99, 216, 230, .35);
-  border-radius: 1.4cqw; box-shadow: 0 0 24px rgba(40, 120, 255, .25), -3cqw 0 3cqw -1cqw rgba(6, 18, 38, .9); overflow: hidden; }
+/* ================= COMPANION DE NOVA (Avatar + Diálogo estilizado) ================= */
+@keyframes novaBob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-7px) rotate(-1.5deg); }
+}
+
+.nova-companion {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  pointer-events: none;
+}
+
+.nova-avatar-wrap {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nova-avatar-img {
+  width: 82px;
+  height: auto;
+  filter: drop-shadow(0 0 14px rgba(99, 216, 230, 0.65));
+  animation: novaBob 3.2s ease-in-out infinite;
+  pointer-events: auto;
+}
+
+/* En Nivel 4 (anterior 3): La Cosecha.
+   La gráfica de arándanos (plot-wrap) está en left: 31.7%.
+   Ubicamos a NOVA estrictamente a la izquierda (left: 1.5%; width: 28%) para que JAMÁS tape la pantalla ni el canvas. */
+.nova-companion.l3 {
+  left: 1.5%;
+  top: 4%;
+  width: 28%;
+  max-width: 380px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.nova-companion.l3 .nova-avatar-img {
+  width: 86px;
+}
+
+.nova-companion.l3 .nova-bubble.b3 {
+  position: relative;
+  left: auto;
+  top: auto;
+  width: 100%;
+  min-height: auto;
+  max-height: 480px;
+  padding: 14px 16px 16px;
+  background: rgba(7, 16, 42, 0.94);
+  border: 1.5px solid rgba(99, 216, 230, 0.7);
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(99, 216, 230, 0.25);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  pointer-events: auto;
+  box-sizing: border-box;
+}
+
+.nova-companion.l3 .nb-tag {
+  position: static;
+  display: inline-block;
+  padding: 2px 8px;
+  margin-bottom: 6px;
+  font: 700 0.68rem 'Space Mono', monospace;
+  letter-spacing: .12em;
+  background: var(--cyan);
+  color: #04122a;
+  border-radius: 4px;
+}
+
+.nova-companion.l3 .nb-say {
+  font: 600 0.88rem/1.45 'Nunito', sans-serif;
+  color: var(--ink);
+  min-height: auto;
+  margin: 0;
+}
+
+.nova-companion.l3 .nb-hi {
+  margin-top: 6px;
+  font: 800 0.88rem/1.4 'Nunito', sans-serif;
+  color: var(--cyan);
+}
+
+.nova-companion.l3 .nb-skip {
+  position: static;
+  display: block;
+  text-align: right;
+  margin-top: 8px;
+  font: 700 0.62rem 'Space Mono', monospace;
+  color: var(--mute);
+  letter-spacing: .1em;
+}
+
+/* En Nivel 3 (anterior 2): El Despliegue. Ubicado en la parte superior sin tapar el mapa táctico */
+.nova-companion.l2 {
+  left: 2%;
+  top: 2%;
+  width: 48%;
+  max-width: 540px;
+  align-items: center;
+  gap: 14px;
+}
+
+.nova-companion.l2 .nova-avatar-img {
+  width: 78px;
+}
+
+.nova-companion.l2 .nova-bubble.b2 {
+  position: relative;
+  left: auto;
+  top: auto;
+  width: 100%;
+  min-height: auto;
+  padding: 12px 14px;
+  background: rgba(7, 16, 42, 0.92);
+  border: 1.5px solid rgba(255, 211, 110, 0.7);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  pointer-events: auto;
+  box-sizing: border-box;
+}
+
+.nova-companion.l2 .nb-tag {
+  position: static;
+  display: inline-block;
+  padding: 2px 8px;
+  margin-bottom: 6px;
+  font: 700 0.68rem 'Space Mono', monospace;
+  background: #ffd36e;
+  color: #04122a;
+  border-radius: 4px;
+}
+
+.nova-companion.l2 .nb-say {
+  font: 600 0.88rem/1.45 'Nunito', sans-serif;
+  min-height: auto;
+  margin: 0;
+}
+
+.nova-companion.l2 .nb-hi {
+  margin-top: 6px;
+  font: 800 0.88rem/1.4 'Nunito', sans-serif;
+  color: #ffd36e;
+}
+
+.nova-companion.l2 .nb-skip {
+  position: static;
+  display: block;
+  text-align: right;
+  margin-top: 6px;
+  font: 700 0.62rem 'Space Mono', monospace;
+  color: var(--mute);
+}
+
+/* En Nivel 2: La Sintonía */
+.nova-companion.ls {
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 16px;
+  width: min(640px, 92%);
+  align-items: center;
+  gap: 14px;
+}
+
+.nova-companion.ls .nova-avatar-img {
+  width: 68px;
+}
+
+.nova-companion.ls .nova-bubble.sintonia {
+  position: relative;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  width: 100%;
+  min-height: auto;
+  padding: 12px 16px;
+  background: rgba(7, 16, 42, 0.92);
+  border: 1.5px solid #3ee08f;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.nova-companion.ls .nb-tag {
+  position: static;
+  display: inline-block;
+  padding: 2px 8px;
+  margin-bottom: 6px;
+  font: 700 0.68rem 'Space Mono', monospace;
+  background: #3ee08f;
+  color: #04122a;
+  border-radius: 4px;
+}
+
+.nova-companion.ls p {
+  font: 600 0.88rem/1.45 'Nunito', sans-serif;
+  color: var(--ink);
+  margin: 0;
+}
+
+.nova-companion.ls .nb-hi {
+  margin-top: 6px;
+  font: 800 0.88rem/1.4 'Nunito', sans-serif;
+  color: #3ee08f;
+}
+
+.nova-companion.ls .nb-skip {
+  position: static;
+  display: block;
+  text-align: right;
+  margin-top: 6px;
+  font: 700 0.62rem 'Space Mono', monospace;
+  color: var(--mute);
+}
+
+.plot-wrap { position: absolute; left: 31%; top: 14%; width: 56%; height: 66%; background: rgba(6, 18, 38, .88); border: 1.5px solid rgba(99, 216, 230, .4);
+  border-radius: 1.4cqw; box-shadow: 0 0 24px rgba(40, 120, 255, .25); overflow: hidden; backdrop-filter: blur(8px); }
 .plot-wrap canvas { width: 100%; height: 100%; display: block; }
 .plot-tag { position: absolute; top: 1cqw; right: 1.2cqw; font: 700 1.2cqw 'Space Mono', monospace; letter-spacing: .14em; color: #63d8e6;
   background: rgba(4, 12, 30, .8); padding: .4cqw .8cqw; border: 1px solid rgba(99, 216, 230, .4); }
 
 @media (max-width: 1000px) {
-  .nb-say, .nova-bubble .nb-say { font-size: 2.6cqw; }
+  .nova-companion.l3 {
+    width: 32%;
+  }
+  .nova-companion.l3 .nova-avatar-img, .nova-companion.l2 .nova-avatar-img {
+    width: 58px;
+  }
+  .nova-companion .nb-say, .nova-companion .nb-hi {
+    font-size: 0.8rem !important;
+  }
 }

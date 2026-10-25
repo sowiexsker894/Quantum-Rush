@@ -106,3 +106,87 @@
   .level-grid { grid-template-columns: minmax(0, 1fr); max-width: 560px; margin: 0 auto; }
   .levels-head { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ================= MODO RETO CONTRARRELOJ (SIN NOVA) ================= */
+.challenge-card {
+  margin-top: 28px;
+  background: linear-gradient(135deg, rgba(255, 92, 122, 0.12), rgba(18, 14, 40, 0.85));
+  border: 1px solid rgba(255, 92, 122, 0.35);
+  border-radius: 12px;
+  padding: 22px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.challenge-card::before {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+  background: #ff5c7a; box-shadow: 0 0 12px #ff5c7a;
+}
+.challenge-card.locked {
+  opacity: 0.6;
+  filter: grayscale(0.5);
+}
+.challenge-card h3 {
+  font: 400 1.6rem 'Anton', sans-serif;
+  color: #fff;
+  margin: 4px 0 6px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.challenge-card p {
+  margin: 0;
+  color: #aab3d6;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  max-width: 750px;
+}
+.challenge-card .btn-challenge {
+  background: #ff5c7a;
+  color: #060919;
+  border: none;
+  font: 700 0.85rem 'Space Mono', monospace;
+  padding: 12px 22px;
+  cursor: pointer;
+  letter-spacing: 0.15em;
+  white-space: nowrap;
+  transition: transform 0.2s, filter 0.2s;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+.challenge-card .btn-challenge:hover:not(:disabled) {
+  filter: brightness(1.15);
+  transform: translateY(-2px);
+}
+.challenge-card .btn-challenge:disabled {
+  background: rgba(142, 153, 196, 0.2);
+  color: #8e99c4;
+  cursor: not-allowed;
+}
+
+/* Modos de ocultamiento estricto durante el Reto */
+body.challenge-mode .nova-companion,
+body.challenge-mode .nova-bubble,
+body.challenge-mode .comm-bubble,
+body.challenge-mode #l1-dict,
+body.challenge-mode #ls-dict,
+body.challenge-mode #l2-dict,
+body.challenge-mode #l3-dict,
+body.challenge-mode #l1-hint,
+body.challenge-mode #ls-hint,
+body.challenge-mode #l2-hint,
+body.challenge-mode #l3-hint,
+body.challenge-mode #btn-glossary {
+  display: none !important;
+}
+
+body.challenge-mode .hud-timer {
+  border-color: #ff5c7a !important;
+  color: #ff5c7a !important;
+  box-shadow: 0 0 10px rgba(255, 92, 122, 0.35) !important;
+}
+body.challenge-mode .hud-timer svg {
+  stroke: #ff5c7a !important;
+}
+

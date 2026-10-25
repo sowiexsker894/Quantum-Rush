@@ -63,6 +63,15 @@
   box-shadow: 0 0 0 rgba(99, 216, 230, 0); transition: transform .2s, filter .2s;
   animation: rise .9s cubic-bezier(.2, .8, .2, 1) .45s both, glow 2.4s ease-in-out 1.4s infinite;
 }
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.btn-launch-alt {
+  background: rgba(99, 216, 230, .14); color: var(--cyan); border: 1px solid rgba(99, 216, 230, .5);
+  animation: rise .9s cubic-bezier(.2, .8, .2, 1) .55s both;
+}
+.btn-launch-alt svg { fill: var(--cyan); }
+.btn-launch-alt:hover { background: var(--cyan); color: #06122a; border-color: var(--cyan); }
+.btn-launch-alt:hover svg { fill: #06122a; }
+
 .btn-launch svg { width: 16px; height: 16px; fill: #06122a; }
 .btn-launch .arrow { fill: none; stroke: #06122a; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
 .btn-launch:hover { transform: translateY(-2px); filter: brightness(1.12); }

@@ -100,15 +100,16 @@ En la terminal del servidor presiona **Ctrl + C**.
 Accesos directos útiles para presentar:
 
 - `?pantalla=niveles` → selección de niveles (en la demo todos están abiertos: `DEMO_MODE` en `static/js/game.js`).
-- `?pantalla=nivel1`, `?pantalla=nivel2`, `?pantalla=nivel3` → abre un nivel directamente.
+- `?pantalla=nivel1`, `?pantalla=sintonia`, `?pantalla=nivel2`, `?pantalla=nivel3` → abre un nivel directamente.
 
 ## Niveles (Proyecto NOVA)
 
 | # | Nivel | Misión | Cuántica | Estadística / ML |
 |---|-------|--------|----------|------------------|
 | 1 | El Balance | Repartir energía 80/20 entre dos países | Superposición (H), rotación Ry, medición | Probabilidad y frecuencia |
-| 2 | El Despliegue | Diagnosticar escuadrones sin biometría clásica | SWAP test (H, CSWAP), fidelidad | KNN (K = 3), votación por mayoría |
-| 3 | La Cosecha | Separar arándanos sanos de dañados | Ry, Rx, CNOT (entrelazamiento) | Clasificador variacional, gradiente, entrenamiento |
+| 2 | La Sintonía | Coordinar balizas de emergencia espaciales | 2 qubits, CNOT, entrelazamiento | Probabilidad conjunta y correlación |
+| 3 | El Despliegue | Diagnosticar escuadrones sin biometría clásica | SWAP test (H, CSWAP), fidelidad | KNN (K = 3), votación por mayoría |
+| 4 | La Cosecha | Separar arándanos sanos de dañados | Ry, Rx, CNOT (entrelazamiento) | Clasificador variacional, gradiente, entrenamiento |
 
 Cada nivel tiene cronómetro, sonido, pistas, diccionario de términos y el botón **VER CÓDIGO QISKIT**.
 
@@ -116,6 +117,6 @@ Cada nivel tiene cronómetro, sonido, pistas, diccionario de términos y el bot�
 
 - **Qiskit en el backend** para todos los cálculos cuánticos. Detalle completo en [QISKIT.md](QISKIT.md).
 - `app.py`: servidor Flask con la API de cada nivel.
-- `quantum_engine.py` (Nivel 1) y `levels_engine.py` (Niveles 2 y 3): motores cuánticos.
-- `templates/index.html` + `static/js/`: landing, video de historia, objetivos, niveles (`level1.js`, `level2.js`, `level3.js`, `levelkit.js`).
+- `quantum_engine.py` (Nivel 1 y 2) y `levels_engine.py` (Niveles 3 y 4): motores cuánticos.
+- `templates/index.html` + `static/js/`: landing, video de historia, objetivos, niveles (`level1.js`, `levelsintonia.js`, `level2.js`, `level3.js`, `levelkit.js`).
 - `static/js/chapters.js`: diccionario de términos (`GLOSSARY`).
